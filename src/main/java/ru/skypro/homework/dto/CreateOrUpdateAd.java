@@ -18,8 +18,9 @@ public class CreateOrUpdateAd {
 //    цена объявления
 
    private String description;
-//    description	string
+   //    description	string
 //    minLength: 8
 //    maxLength: 64
 //    описание объявления
+
 }

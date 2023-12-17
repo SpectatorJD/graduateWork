@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 @Data
 public class Comment {
 
-    private Integer auther;
+    private Integer author;
     //    author	integer($int32)
 //    id автора комментария
 
