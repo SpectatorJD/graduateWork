@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Ad {
 
-    private Integer auther;
+    private Integer author;
     //    author	integer($int32)
 //    id автора объявления
 
