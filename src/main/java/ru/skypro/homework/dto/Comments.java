@@ -12,9 +12,7 @@ public class Comments {
 //    count	integer($int32)
 //    общее количество комментариев
 
-  @ManyToOne
-  @JoinColumn(name = "comment_id")
-  private Comment results;
+  private Comment[] results;
 //    results	[Comment{Jump to definition
 //        author	[...]
 //        authorImage	[...]
