@@ -12,9 +12,7 @@ public class Ads {
     //    count	integer($int32)
 //    общее количество объявлений
 
-    @ManyToOne
-    @JoinColumn(name = "ad_id")
-    private Ad results;
+    private Ad[] results;
 //    results	[Ad{Jump to definition
 //        author	integer($int32)
 //                id автора объявления
