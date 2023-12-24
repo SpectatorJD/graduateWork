@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.mappers.UsersMapper;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -22,16 +24,13 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
-
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl {
 
     private final UserRepository userRepository;
-    @SneakyThrows
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UsersMapper usersMapper;
+
     @Value("${image.dir.path}")
     private String imagesDir;
 //    POST
@@ -58,7 +57,7 @@ public class UserServiceImpl {
 //    Forbidden
 
 //        @PostMapping("/set_password")
-        public ResponseEntity<NewPassword> createPassword( NewPassword password) {
+        public NewPassword createPassword( NewPassword password) {
             return userRepository.save(password);
         }
 
@@ -161,12 +160,12 @@ public class UserServiceImpl {
 //401
 //Unauthorized
 //        @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-        public String uploadImage () throws IOException {
+        public String uploadImageToUser () throws IOException {
             userRepository.save(image);
             return ResponseEntity.ok().build();
         }
-    public void uploadAvatar(Long id, MultipartFile file) throws IOException {
-    User user = findOne(id);
+    public void uploadImage(Long id, MultipartFile file) throws IOException {
+    UserEntity user = findOne(id);
     Path filePath = Path.of("./image", id + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
