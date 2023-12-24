@@ -41,48 +41,6 @@ public class AdController {
         ru.skypro.homework.dto.Ads ads = adService.getAllInfoAboutAds();
         return ResponseEntity.ok(ads);
     }
-        //POST
-        ///ads
-        //Добавление объявления
-//        Parameters
-//                Cancel
-//        Reset
-//        No parameters
-//
-//        Request body
-//
-//        multipart/form-data
-//        properties *
-//                object
-//        {
-//            "title": "string",
-//                "price": 10000000,
-//                "description": "stringst"
-//        }
-//        image *
-//                string($binary)
-//        Файл не выбран
-//                Execute
-//        Responses
-//        Code	Description	Links
-//        201
-//        Created
-//
-//        Media type
-//
-//        application/json
-//        Controls Accept header.
-//                Example Value
-//        Schema
-//        {
-//            "author": 0,
-//                "image": "string",
-//                "pk": 0,
-//                "price": 0,
-//                "title": "string"
-//        }
-//        401
-//        Unauthorized
 
         @Operation(summary = "Добавление объявления")
         @ApiResponses(value = {
@@ -93,8 +51,7 @@ public class AdController {
 
         @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE) {
             public CreateOrUpdateAd createAd (@RequestBody CreateOrUpdateAd createUpdate,
-                @RequestParam MultipartFile ad)
-            {
+                @RequestParam MultipartFile ad){
                 createOrUpdateService.addAd(createAd);
                 adService.uploadAd(ad);
                 return ResponseEntity.ok().build();
@@ -133,58 +90,6 @@ public class AdController {
             return ResponseEntity.ok().build();
         }
 
-        //PATCH
-        ///ads/{id}
-        //Обновление информации об объявлении
-//        PATCH
-///ads/{id}
-//Обновление информации об объявлении
-//Jump to definition
-//Parameters
-//Cancel
-//Name	Description
-//id *
-//integer($int32)
-//(path)
-//id
-//Request body
-//
-//application/json
-//{
-//  "title": "string",
-//  "price": 10000000,
-//  "description": "stringst"
-//}
-//Execute
-//Responses
-//Code	Description	Links
-//200
-//OK
-//
-//Media type
-//
-//application/json
-//Controls Accept header.
-//Example Value
-//Schema
-//{
-//  "author": 0,
-//  "image": "string",
-//  "pk": 0,
-//  "price": 0,
-//  "title": "string"
-//}
-//No links
-//401
-//Unauthorized
-//
-//No links
-//403
-//Forbidden
-//
-//No links
-//404
-//Not found
         @Operation(summary = "Обновление информации об объявлении")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",
@@ -203,40 +108,6 @@ public class AdController {
             return ResponseEntity.ok(updateAd);
         }
 
-        //GET
-        ///ads/me
-        //Получение объявлений авторизованного пользователя
-//        Parameters
-//Cancel
-//No parameters
-//
-//Execute
-//Responses
-//Code	Description	Links
-//200
-//OK
-//
-//Media type
-//
-//application/json
-//Controls Accept header.
-//Example Value
-//Schema
-//{
-//  "count": 0,
-//  "results": [
-//    {
-//      "author": 0,
-//      "image": "string",
-//      "pk": 0,
-//      "price": 0,
-//      "title": "string"
-//    }
-//  ]
-//}
-//No links
-//401
-//Unauthorized
         @Operation(summary = "Получение объявлений авторизованного пользователя")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",
@@ -248,49 +119,6 @@ public class AdController {
             return ResponseEntity.ok(adService.getMe());
         }
 
-        //PATCH
-//        /ads/{id}/image
-//Обновление картинки объявления
-//        Parameters
-//Cancel
-//Reset
-//Name	Description
-//id *
-//integer($int32)
-//(path)
-//id
-//Request body
-//
-//multipart/form-data
-//image *
-//string($binary)
-//Файл не выбран
-//Execute
-//Responses
-//Code	Description	Links
-//200
-//OK
-//
-//Media type
-//
-//application/octet-stream
-//Controls Accept header.
-//Example Value
-//Schema
-//[
-//  "string"
-//]
-//No links
-//401
-//Unauthorized
-//
-//No links
-//403
-//Forbidden
-//
-//No links
-//404
-//Not found
         @Operation(summary = "Обновление картинки объявления")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",
@@ -463,9 +291,9 @@ public class AdController {
                 @ApiResponse(responseCode = "403", description = "Forbidden"),
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
-        @DeleteMapping("/{adId}/comments")
-        public ResponseEntity<Collection> deleteInfoAboutAdById (@PathVariable Long adId){
-            commentService.deleteInfoAboutAdById(id);
+        @DeleteMapping("/{adId}/comments/{id}")
+        public ResponseEntity<Collection> deleteInfoAboutAdById (@PathVariable Long adId, @PathVariable Long Id){
+            commentService.deleteInfoAboutAdById(adID,id);
             return ResponseEntity.ok().build();
         }
 

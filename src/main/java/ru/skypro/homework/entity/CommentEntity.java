@@ -52,7 +52,7 @@ public class CommentEntity {
 //    текст комментария
 
     @OneToOne()
-    @Column(name = "ad_id")
+    @Column(name = "adId")
     private AdEntity adEntity;
 
     @Override
