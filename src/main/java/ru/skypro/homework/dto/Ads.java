@@ -1,7 +1,9 @@
 package ru.skypro.homework.dto;
 
 import antlr.collections.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,13 +13,17 @@ import java.util.Collection;
 
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Ads {
 
     private Integer count;
+
     //    count	integer($int32)
 //    общее количество объявлений
 
     private Collection<Ad> results;
+
 //    results	[Ad{Jump to definition
 //        author	integer($int32)
 //                id автора объявления

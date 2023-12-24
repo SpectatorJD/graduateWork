@@ -1,112 +1,65 @@
 package ru.skypro.homework.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity(name = "comments")
-public class Comment {
-    public Comment() {
-    }
+public class CommentEntity {
+
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Long id;
-    private Integer author;
+
+    @OneToOne
+    @Column(name = "author")
+    private UserEntity author;
     //    author	integer($int32)
 //    id автора комментария
 
+    @Column(name = "author_image")
     private String authorImage;
 //    authorImage	string
 //    ссылка на аватар автора комментария
 
+@Column(name = "author_first_name")
     private String authorFirstName;
     //    authorFirstName	string
 //    имя создателя комментария
 
+@Column(name = "create_at")
     private Timestamp createAt;
 //    createdAt	integer($int64)
 //    дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
 
-    private Integer pk;
+    @OneToOne
+@Column(name = "pk")
+    private CommentEntity pk;
     //    pk	integer($int32)
 //    id комментария
+
+    @Column(name = "text")
     private String text;
-//    text	string
+    //    text	string
 //    текст комментария
 
-    public Comment(Long id, Integer author, String authorImage, String authorFirstName, Timestamp createAt, Integer pk, String text) {
-        this.id = id;
-        this.author = author;
-        this.authorImage = authorImage;
-        this.authorFirstName = authorFirstName;
-        this.createAt = createAt;
-        this.pk = pk;
-        this.text = text;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Integer author) {
-        this.author = author;
-    }
-
-    public String getAuthorImage() {
-        return authorImage;
-    }
-
-    public void setAuthorImage(String authorImage) {
-        this.authorImage = authorImage;
-    }
-
-    public String getAuthorFirstName() {
-        return authorFirstName;
-    }
-
-    public void setAuthorFirstName(String authorFirstName) {
-        this.authorFirstName = authorFirstName;
-    }
-
-    public Timestamp getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Timestamp createAt) {
-        this.createAt = createAt;
-    }
-
-    public Integer getPk() {
-        return pk;
-    }
-
-    public void setPk(Integer pk) {
-        this.pk = pk;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
+    @OneToOne()
+    @Column(name = "ad_id")
+    private AdEntity adEntity;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
+        CommentEntity comment = (CommentEntity) o;
         return Objects.equals(id, comment.id) && Objects.equals(author, comment.author) && Objects.equals(authorImage, comment.authorImage) && Objects.equals(authorFirstName, comment.authorFirstName) && Objects.equals(createAt, comment.createAt) && Objects.equals(pk, comment.pk) && Objects.equals(text, comment.text);
     }
 
@@ -117,7 +70,7 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment{" +
+        return "CommentEntity{" +
                 "id=" + id +
                 ", author=" + author +
                 ", authorImage='" + authorImage + '\'' +
