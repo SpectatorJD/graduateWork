@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
@@ -35,11 +36,16 @@ public class UsersController {
         @ApiResponse(responseCode = "403", description = "Forbidden")})
 
     @PostMapping("/set_password")
-public ResponseEntity<NewPassword> createPassword(@RequestBody NewPassword password) {
-    userService.createPassword(password);
-            return ResponseEntity.ok().build();
-        }
-
+    public ResponseEntity<NewPassword> setPassword(@RequestBody NewPassword newPassword, Authentication authentication) {
+    NewPassword resultPassword = new NewPassword();
+    userService.changePassword(
+                    authentication.getName(),
+                    newPassword.getCurrentPassword(),
+                    newPassword.getNewPassword()
+            )
+            .ifPresent(resultPassword::setCurrentPassword);
+    return ResponseEntity.ok(resultPassword);
+}
 
     @Operation(summary = "Получение информации об авторизованном пользователе")
     @ApiResponses(value = {
@@ -49,7 +55,7 @@ public ResponseEntity<NewPassword> createPassword(@RequestBody NewPassword passw
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
 
     @GetMapping("/me")
-public ResponseEntity<User> getMe() {
+public ResponseEntity<User> getMe(Authentication authentication) {
         return ResponseEntity.ok(getMe().getBody());
     }
 
@@ -62,7 +68,7 @@ public ResponseEntity<User> getMe() {
         @ApiResponse(responseCode = "401", description = "Unauthorized")})
 
 @PatchMapping("/me")
-public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser) {
+public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser, Authentication authentication) {
     UpdateUser foundUpdateUser = userService.updateUser(updateUser);
     if (foundUpdateUser == null) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -77,8 +83,8 @@ public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser)
         @ApiResponse(responseCode = "401", description = "Unauthorized")})
 
 @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-public ResponseEntity<String> uploadImageToUser (@RequestParam MultipartFile image) throws IOException {
-    userService.uploadImage(image);
+public ResponseEntity<String> updateImage (@RequestParam MultipartFile image, Authentication authentication) throws IOException {
+    userService.updateImage(image);
     return ResponseEntity.ok().build();
 }
 }

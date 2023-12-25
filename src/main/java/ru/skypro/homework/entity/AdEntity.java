@@ -44,6 +44,11 @@ public class AdEntity {
     private String title;
 //    title	string
 //    заголовок объявления
+//
+    @Column(name = "description")
+    private String description;
+//    title	string
+//    заголовок объявления
 
 //@Column(name = "auther_first_Name") private String authorFirstName;
 ////    authorFirstName	string

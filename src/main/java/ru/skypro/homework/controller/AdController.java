@@ -11,12 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
+import java.io.IOException;
 import java.util.Collection;
 
 @Slf4j
@@ -38,7 +41,7 @@ public class AdController {
 
     @GetMapping
     public ResponseEntity<Ads>getAllInfoAboutAds() {
-        ru.skypro.homework.dto.Ads ads = adService.getAllInfoAboutAds();
+        Ads ads = adService.getAllInfoAboutAds();
         return ResponseEntity.ok(ads);
     }
 
@@ -49,14 +52,13 @@ public class AdController {
                                 array = @ArraySchema(schema = @Schema(implementation = Ad.class)))),
                 @ApiResponse(responseCode = "401", description = "Unauthorized")})
 
-        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE) {
-            public CreateOrUpdateAd createAd (@RequestBody CreateOrUpdateAd createUpdate,
-                @RequestParam MultipartFile ad){
-                createOrUpdateService.addAd(createAd);
-                adService.uploadAd(ad);
+        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        ResponseEntity<Ad> addAd(@RequestPart(value = "properties", required = true) CreateOrUpdateAd properties,
+                                 @RequestPart(value = "image", required = true) MultipartFile image) {
+                CreateOrUpdateAd createAd = adService.createAd(properties,image);
                 return ResponseEntity.ok().build();
             }
-        }
+
 
 
         @Operation(summary = "Получение информации об объявлении")
@@ -115,7 +117,7 @@ public class AdController {
                                 array = @ArraySchema(schema = @Schema(implementation = Ads.class)))),
                 @ApiResponse(responseCode = "401", description = "Unauthorized")})
         @GetMapping("/me")
-        public Ads getMe () {
+        public Ads getMe (Authentication authentication) {
             return ResponseEntity.ok(adService.getMe());
         }
 
@@ -129,55 +131,12 @@ public class AdController {
                 @ApiResponse(responseCode = "404", description = "Not found")})
         @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<String> uploadImage (@PathVariable Long id, @RequestParam MultipartFile image) throws
-        IOException {
+                IOException {
             adService.uploadImage(id, image);
             return ResponseEntity.ok().build();
         }
 
 
-
-//    GET
-///ads/{id}/comments
-//Получение комментариев объявления
-//        Parameters
-//Cancel
-//Name	Description
-//id *
-//integer($int32)
-//(path)
-//id
-//Execute
-//Responses
-//Code	Description	Links
-//200
-//OK
-//
-//Media type
-//
-//application/json
-//Controls Accept header.
-//Example Value
-//Schema
-//{
-//  "count": 0,
-//  "results": [
-//    {
-//      "author": 0,
-//      "authorImage": "string",
-//      "authorFirstName": "string",
-//      "createdAt": 0,
-//      "pk": 0,
-//      "text": "string"
-//    }
-//  ]
-//}
-//No links
-//401
-//Unauthorized
-//
-//No links
-//404
-//Not found
         @Operation(summary = "Получение комментариев объявления")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "Ok",
@@ -195,51 +154,7 @@ public class AdController {
             return ResponseEntity.ok(comment);
         }
 
-/
-//        POST
-///ads/{id}/comments
-//Добавление комментария к объявлению
-//Jump to definition
-//Parameters
-//Cancel
-//Name	Description
-//id *
-//integer($int32)
-//(path)
-//id
-//Request body
-//
-//application/json
-//{
-//  "text": "stringst"
-//}
-//Execute
-//Responses
-//Code	Description	Links
-//200
-//OK
-//
-//Media type
-//
-//application/json
-//Controls Accept header.
-//Example Value
-//Schema
-//{
-//  "author": 0,
-//  "authorImage": "string",
-//  "authorFirstName": "string",
-//  "createdAt": 0,
-//  "pk": 0,
-//  "text": "string"
-//}
-//No links
-//401
-//Unauthorized
-//
-//No links
-//404
-//Not found
+
         @Operation(summary = "Добавление комментария к объявлению")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",
@@ -253,37 +168,6 @@ public class AdController {
             return commentService.createComment(createComment);
         }
 
-//DELETE
-///ads/{adId}/comments/{commentId}
-//Удаление комментария
-//        Parameters
-//Cancel
-//Name	Description
-//adId *
-//integer($int32)
-//(path)
-//adId
-//commentId *
-//integer($int32)
-//(path)
-//commentId
-//Execute
-//Responses
-//Code	Description	Links
-//200
-//OK
-//
-//No links
-//401
-//Unauthorized
-//
-//No links
-//403
-//Forbidden
-//
-//No links
-//404
-//Not found
         @Operation(summary = "Удаление комментария")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK"),
@@ -292,42 +176,12 @@ public class AdController {
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
         @DeleteMapping("/{adId}/comments/{id}")
-        public ResponseEntity<Collection> deleteInfoAboutAdById (@PathVariable Long adId, @PathVariable Long Id){
-            commentService.deleteInfoAboutAdById(adID,id);
+        public ResponseEntity<Comment> deleteInfoAboutCommentById (@PathVariable Long adId, @PathVariable Long Id){
+            commentService.deleteInfoAboutCommentById(id);
+            commentService.deleteInfoAboutCommentById(adID);
             return ResponseEntity.ok().build();
         }
 
-//PATCH
-///ads/{adId}/comments/{commentId}
-//Обновление комментария
-//        Parameters
-//Cancel
-//Name	Description
-//adId *
-//integer($int32)
-//(path)
-//adId
-//commentId *
-//integer($int32)
-//(path)
-//commentId
-//Execute
-//Responses
-//Code	Description	Links
-//200
-//OK
-//
-//No links
-//401
-//Unauthorized
-//
-//No links
-//403
-//Forbidden
-//
-//No links
-//404
-//Not found
         @Operation(summary = "Обновление комментария")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",

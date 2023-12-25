@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.mappers.CommentsMapper;
@@ -22,7 +23,7 @@ public class CommentServiceImpl {
     private final CommentsMapper commentsMapper;
 
 
-    public Comment getInfoAboutCommitById (Long id){
+    public Comments getInfoAboutCommitById (Long id){
             List<Comment> collect = commentRepository.findById(id).stream().map(e -> commentsMapper.commentsToDto(e)).collect(Collectors.toList());
 
 //            Ad ad = new Ad();
@@ -37,22 +38,25 @@ public class CommentServiceImpl {
         }
 
     public CreateOrUpdateComment createComment ( Long id, CreateOrUpdateComment createComment){
-        List<Comment> collect = commentRepository.findById(id).stream().map(e -> commentsMapper.commentsToDto(e)).collect(Collectors.toList());
-        collect =commentRepository.save(createComment)
-        return (CreateOrUpdateComment) collect;
+        CommentEntity commentEntity = commentRepository.findById(id).get();
+        commentEntity.setText(createComment.getText());
+        commentRepository.save(commentEntity);
+        return  commentsMapper.updateCommentToDto(commentEntity);
+
     }
 
-    public CommentEntity deleteInfoAboutAdById (Long adId,Long Id){
-      return commentRepository.deleteById(ad_id,Id);
+    public void deleteInfoAboutCommentById (Long adId,Long Id){
+      commentRepository.deleteById(Id);
+      commentRepository.deleteById(ad_id);
 
     }
 
 
     public List<CreateOrUpdateComment> UpdateComment ( Long id, CreateOrUpdateComment updateComment){
-
-        List <CreateOrUpdateAd> collect = commentRepository.findById(id).stream().map(e -> commentsMapper.updateCommentToDto(e)).collect(Collectors.toList());
-        collect =  commentRepository.save(updateComment);
-        return (CreateOrUpdateAd) collect;
+        CommentEntity commentEntity = commentRepository.findById(id).get();
+        commentEntity.setText(updateComment.getText());
+        commentRepository.save(commentEntity);
+        return commentsMapper.updateCommentToDto(commentEntity);
 }
 }
 

@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
@@ -32,33 +33,7 @@ public class AdServiceImpl {
     private String imagesDir;
 
     //upload image
-    public void uploadImage(Long id, MultipartFile file) throws IOException {
 
-        AdEntity adEntity = findOne(id);
-        Path filePath = Path.of("./image", id + "." + getExtension(file.getOriginalFilename()));
-        Files.createDirectories(filePath.getParent());
-        Files.deleteIfExists(filePath);
-        try (InputStream is = file.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
-        ) {
-            bis.transferTo(bos);
-        }
-        AdEntity adEntity = adRepository.findById(id).orElseGet(AdEntity::new);
-        adEntity.setId(adEntity.getId());
-        adEntity.setImage(file.toString());
-        adRepository.save(adEntity);
-    }
-
-    //    file name gets extended
-    private String getExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
-    }
-    //finds ad by id
-    public Optional<AdEntity> findOne(long id) {
-        return adRepository.findById(id);
-    }
 
 
     public Ads getAllInfoAboutAds() {
@@ -75,10 +50,15 @@ public class AdServiceImpl {
         return new Ads(collect.size(), collect);
     }
 
-//        public CreateOrUpdateAd createAd (Long id, MultipartFile image){
-//        uploadImage(id, image);
-//        return adRepository.save();
-//    }
+        public CreateOrUpdateAd createAd (CreateOrUpdateAd createAd, MultipartFile image){
+            AdEntity adEntity = new AdEntity();
+            adEntity.setTitle(createAd.getTitle());
+            adEntity.setPrice(createAd.getPrice());
+            adEntity.setDescription(createAd.getDescription());
+            adRepository.save(adEntity);
+            return  adsMapper.updateAdToDto(adEntity);
+
+    }
 
 
 
@@ -88,20 +68,23 @@ public class AdServiceImpl {
         }
 
 
-    public AdEntity deleteInfoAboutAdById(Long id) {
-        return adRepository.deleteById(id);
+    public void deleteInfoAboutAdById(Long id) {
+         adRepository.deleteById(id);
     }
 
 
     public CreateOrUpdateAd updateAd(Long id, CreateOrUpdateAd updateAd) {
-          List <CreateOrUpdateAd> collect = adRepository.findById(id).stream().map(e -> adsMapper.updateAdToDto(e)).collect(Collectors.toList());
-           collect =  adRepository.save(updateAd);
-            return (CreateOrUpdateAd) collect;
+        AdEntity adEntity = adRepository.findById(id).get();
+        adEntity.setTitle(updateAd.getTitle());
+        adEntity.setPrice(updateAd.getPrice());
+        adEntity.setDescription(updateAd.getDescription());
+        adRepository.save(adEntity);
+        return  adsMapper.updateAdToDto(adEntity);
         }
 
 
-    public Ads getMe() {
-            List<Ad> collect = adRepository.findAll().stream().map(e -> {
+    public Ads getMe(Authentication authentication) {
+            List<Ad> collect = adRepository.findById(authentication.).stream().map(e -> {
                 Ad ad = new Ad();
                 ad.setAuthor(ad.getAuthor());
                 ad.setPk(ad.getPk());
@@ -113,11 +96,32 @@ public class AdServiceImpl {
             return new Ads(collect.size(),collect);
         }
 
-
+// загружает картинку
     public AdEntity uploadImage(Long id, MultipartFile image) throws
             IOException {
-        return adRepository.save(id, image);
+        Path filePath = Path.of("./image", id + "." + getExtension(image.getOriginalFilename()));
+        Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+        try (InputStream is = image.getInputStream();
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+        ) {
+            bis.transferTo(bos);
+        }
+        AdEntity adEntity = adRepository.findById(id).orElseGet(AdEntity::new);
+        adEntity.setId(adEntity.getId());
+        adEntity.setImage(image.toString());
+        adRepository.save(adEntity);
+    }
+
+    //    имя файла расширяется
+    private String getExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+    //находит объявление по идентификатору
+    public Optional<AdEntity> findOne(long id) {
+        return adRepository.findById(id);
+    }
 
     }
-}
-}
