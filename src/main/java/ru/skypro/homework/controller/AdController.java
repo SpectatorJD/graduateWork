@@ -15,12 +15,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
 import java.io.IOException;
-import java.util.Collection;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -53,10 +53,10 @@ public class AdController {
                 @ApiResponse(responseCode = "401", description = "Unauthorized")})
 
         @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-        ResponseEntity<Ad> addAd(@RequestPart(value = "properties", required = true) CreateOrUpdateAd properties,
+        ResponseEntity<CreateOrUpdateAd> addAd(@RequestPart(value = "properties", required = true) CreateOrUpdateAd properties,
                                  @RequestPart(value = "image", required = true) MultipartFile image) {
                 CreateOrUpdateAd createAd = adService.createAd(properties,image);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok(createAd);
             }
 
 
@@ -70,7 +70,7 @@ public class AdController {
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
         @GetMapping("{id}")
-        public ResponseEntity<ExtendedAd> getInfoExtendedAdById (@PathVariable Long id){
+        public ResponseEntity<ExtendedAd> getInfoExtendedAdById (@PathVariable Integer id){
             ExtendedAd extendedAd = adService.getInfoExtendedAdById(id);
             if (extendedAd == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -87,7 +87,7 @@ public class AdController {
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
         @DeleteMapping("{id}")
-        public ResponseEntity<Ad> deleteInfoAboutAdById (@PathVariable Long id){
+        public ResponseEntity<Ad> deleteInfoAboutAdById (@PathVariable Integer id){
             adService.deleteInfoAboutAdById(id);
             return ResponseEntity.ok().build();
         }
@@ -102,12 +102,12 @@ public class AdController {
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
         @PatchMapping("{id}")
-        public ResponseEntity<Ad> updateAd (@PathVariable Long id, @RequestBody CreateOrUpdateAd updateAd){
-            CreateOrUpdateAd foundAd = adService.updateAd(id);
+        public ResponseEntity<CreateOrUpdateAd> updateAd (@PathVariable Integer id, @RequestBody CreateOrUpdateAd updateAd){
+            CreateOrUpdateAd foundAd = adService.updateAd(id,updateAd);
             if (foundAd == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            return ResponseEntity.ok(updateAd);
+            return ResponseEntity.ok(foundAd);
         }
 
         @Operation(summary = "Получение объявлений авторизованного пользователя")
@@ -117,8 +117,9 @@ public class AdController {
                                 array = @ArraySchema(schema = @Schema(implementation = Ads.class)))),
                 @ApiResponse(responseCode = "401", description = "Unauthorized")})
         @GetMapping("/me")
-        public Ads getMe (Authentication authentication) {
-            return ResponseEntity.ok(adService.getMe());
+        public ResponseEntity<Ads> getMe (Authentication authentication) {
+        Ads ads = adService.getMe(authentication);
+        return ResponseEntity.ok(ads);
         }
 
         @Operation(summary = "Обновление картинки объявления")
@@ -129,13 +130,15 @@ public class AdController {
                 @ApiResponse(responseCode = "401", description = "Unauthorized"),
                 @ApiResponse(responseCode = "403", description = "Forbidden"),
                 @ApiResponse(responseCode = "404", description = "Not found")})
+
         @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-        public ResponseEntity<String> uploadImage (@PathVariable Long id, @RequestParam MultipartFile image) throws
+        public ResponseEntity<String> uploadImage (@PathVariable Integer id, @RequestParam MultipartFile image) throws
                 IOException {
             adService.uploadImage(id, image);
             return ResponseEntity.ok().build();
         }
 
+        //Comments
 
         @Operation(summary = "Получение комментариев объявления")
         @ApiResponses(value = {
@@ -146,12 +149,12 @@ public class AdController {
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
         @GetMapping("/{id}/comments")
-        public ResponseEntity<Comment> getInfoAboutCommitById (@PathVariable Long id){
-            Comment comment = commentService.getInfoAboutCommitById(id);
-            if (comment == null) {
+        public ResponseEntity<Comments> getInfoAboutCommitById (@PathVariable Integer id){
+            Comments comments = commentService.getInfoAboutCommitById(id);
+            if (comments == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            return ResponseEntity.ok(comment);
+            return ResponseEntity.ok(comments);
         }
 
 
@@ -163,9 +166,10 @@ public class AdController {
                 @ApiResponse(responseCode = "401", description = "Unauthorized"),
                 @ApiResponse(responseCode = "404", description = "Not found")})
         @PostMapping("/{id}/comments")
-        public CreateOrUpdateComment createComment (@PathVariable Long id, @RequestBody CreateOrUpdateComment
+        public ResponseEntity<CreateOrUpdateComment> createComment (@PathVariable Integer id, @RequestBody CreateOrUpdateComment
         createComment){
-            return commentService.createComment(createComment);
+            CreateOrUpdateComment comment = commentService.createComment(id, createComment);
+            return ResponseEntity.ok(comment);
         }
 
         @Operation(summary = "Удаление комментария")
@@ -175,10 +179,9 @@ public class AdController {
                 @ApiResponse(responseCode = "403", description = "Forbidden"),
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
-        @DeleteMapping("/{adId}/comments/{id}")
-        public ResponseEntity<Comment> deleteInfoAboutCommentById (@PathVariable Long adId, @PathVariable Long Id){
-            commentService.deleteInfoAboutCommentById(id);
-            commentService.deleteInfoAboutCommentById(adID);
+        @DeleteMapping("/{adId}/comments/{commentId}")
+        public ResponseEntity<Comment> deleteInfoAboutCommentById (@PathVariable Integer adId, @PathVariable Integer commentId){
+            commentService.deleteInfoAboutCommentById(adId, commentId);
             return ResponseEntity.ok().build();
         }
 
@@ -191,14 +194,14 @@ public class AdController {
                 @ApiResponse(responseCode = "403", description = "Forbidden"),
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
-        @PatchMapping("/{adId}/comments")
-        public ResponseEntity<CreateOrUpdateComment> UpdateComment (@PathVariable Long id,
-            @RequestBody CreateOrUpdateComment UpdateComment){
-            CreateOrUpdateComment updateComment = commentService.UpdateComment(updateComment);
-            if (updateComment == null) {
+        @PatchMapping("/{adId}/comments/{commentId}")
+        public ResponseEntity<CreateOrUpdateComment> UpdateComment (@PathVariable Integer adId,
+            @PathVariable Integer commentId,@RequestBody CreateOrUpdateComment updateComment){
+             CommentEntity commentEntity = (CommentEntity) commentService.updateComment(adId, commentId, updateComment);
+            if (commentEntity == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             return ResponseEntity.ok(updateComment);
         }
     }
-}
+

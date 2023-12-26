@@ -16,71 +16,39 @@ public class AdEntity {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @OneToOne
     @Column(name = "author")
     private UserEntity author;
-    //    author	integer($int32)
-//    id автора объявления
 
     @Column(name = "image")
     private String image;
-    //    image	string
-//    ссылка на картинку объявления
 
     @OneToOne
     @Column(name = "pk")
     private AdEntity pk;
-    //    pk	integer($int32)
-//    id объявления
 
     @Column(name = "price")
     private Integer price;
-    //    price	integer($int32)
-//    цена объявления
 
     @Column(name = "title")
     private String title;
-//    title	string
-//    заголовок объявления
-//
+
     @Column(name = "description")
     private String description;
-//    title	string
-//    заголовок объявления
-
-//@Column(name = "auther_first_Name") private String authorFirstName;
-////    authorFirstName	string
-////    имя автора объявления
-//
-//    private String authorLastName;
-////    authorLastName	string
-////    фамилия автора объявления
-//
-//    private String description;
-////    description	string
-////    описание объявления
-//
-//    private String email;
-////    email	string
-////    логин автора объявления
-
-//    private String phone;
-////    phone	string
-////    телефон автора объявления
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AdEntity adEntity = (AdEntity) o;
-        return Objects.equals(id, adEntity.id) && Objects.equals(author, adEntity.author) && Objects.equals(image, adEntity.image) && Objects.equals(pk, adEntity.pk) && Objects.equals(price, adEntity.price) && Objects.equals(title, adEntity.title);
+        return Objects.equals(id, adEntity.id) && Objects.equals(author, adEntity.author) && Objects.equals(image, adEntity.image) && Objects.equals(pk, adEntity.pk) && Objects.equals(price, adEntity.price) && Objects.equals(title, adEntity.title) && Objects.equals(description, adEntity.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, author, image, pk, price, title);
+        return Objects.hash(id, author, image, pk, price, title, description);
     }
 
     @Override
@@ -92,6 +60,7 @@ public class AdEntity {
                 ", pk=" + pk +
                 ", price=" + price +
                 ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

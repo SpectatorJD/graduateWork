@@ -23,7 +23,7 @@ public class CommentServiceImpl {
     private final CommentsMapper commentsMapper;
 
 
-    public Comments getInfoAboutCommitById (Long id){
+    public Comments getInfoAboutCommitById (Integer id){
             List<Comment> collect = commentRepository.findById(id).stream().map(e -> commentsMapper.commentsToDto(e)).collect(Collectors.toList());
 
 //            Ad ad = new Ad();
@@ -37,7 +37,7 @@ public class CommentServiceImpl {
             return new Comments(collect.size(), collect);
         }
 
-    public CreateOrUpdateComment createComment ( Long id, CreateOrUpdateComment createComment){
+    public CreateOrUpdateComment createComment (Integer id, CreateOrUpdateComment createComment){
         CommentEntity commentEntity = commentRepository.findById(id).get();
         commentEntity.setText(createComment.getText());
         commentRepository.save(commentEntity);
@@ -45,15 +45,14 @@ public class CommentServiceImpl {
 
     }
 
-    public void deleteInfoAboutCommentById (Long adId,Long Id){
-      commentRepository.deleteById(Id);
-      commentRepository.deleteById(ad_id);
+    public void deleteInfoAboutCommentById (Integer adId, Integer commentId){
+      commentRepository.deleteById(adId, commentId);
 
     }
 
 
-    public List<CreateOrUpdateComment> UpdateComment ( Long id, CreateOrUpdateComment updateComment){
-        CommentEntity commentEntity = commentRepository.findById(id).get();
+    public List<CreateOrUpdateComment> updateComment (Integer adId, Integer commentId,CreateOrUpdateComment updateComment){
+        CommentEntity commentEntity = commentRepository.findByAdIdAndCommentId(adId, commentId).get();
         commentEntity.setText(updateComment.getText());
         commentRepository.save(commentEntity);
         return commentsMapper.updateCommentToDto(commentEntity);
