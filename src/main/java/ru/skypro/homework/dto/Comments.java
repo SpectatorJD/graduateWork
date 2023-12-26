@@ -2,8 +2,6 @@ package ru.skypro.homework.dto;
 
 import lombok.Data;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.util.Collection;
 
 @Data

@@ -32,16 +32,13 @@ public class AdServiceImpl {
     @Value("${image.dir.path}")
     private String imagesDir;
 
-    //upload image
-
-
-
+    //Получение всех объявлений
     public Ads getAllInfoAboutAds() {
         List<Ad> collect = adRepository.findAll().stream().map(e -> adsMapper.adsToDto(e)).collect(Collectors.toList());
-
         return new Ads(collect.size(), collect);
     }
 
+    //Добавление объявления
         public CreateOrUpdateAd createAd (CreateOrUpdateAd createAd, MultipartFile image){
             AdEntity adEntity = new AdEntity();
             adEntity.setTitle(createAd.getTitle());
@@ -52,19 +49,18 @@ public class AdServiceImpl {
 
     }
 
-
-
+    //Получение информации об объявлении
     public ExtendedAd getInfoExtendedAdById(Integer id) {
            List<ExtendedAd> collect = adRepository.findById(id).stream().map(e -> adsMapper.extendAdToDto(e)).collect(Collectors.toList());
             return (ExtendedAd) collect;
         }
 
-
+        //Удаление объявления
     public void deleteInfoAboutAdById(Integer id) {
          adRepository.deleteById(id);
     }
 
-
+    //Обновление информации об объявлении
     public CreateOrUpdateAd updateAd(Integer id, CreateOrUpdateAd updateAd) {
         AdEntity adEntity = adRepository.findById(id).get();
         adEntity.setTitle(updateAd.getTitle());
@@ -74,7 +70,7 @@ public class AdServiceImpl {
         return  adsMapper.updateAdToDto(adEntity);
         }
 
-
+        //Получение объявлений авторизованного пользовател
     public Ads getMe(Authentication authentication) {
             List<Ad> collect = adRepository.findById(authentication.).stream().map(e -> {
                 Ad ad = new Ad();
@@ -88,7 +84,7 @@ public class AdServiceImpl {
             return new Ads(collect.size(),collect);
         }
 
-// загружает картинку
+// Обновление картинки объявления
     public AdEntity uploadImage(Integer id, MultipartFile image) throws
             IOException {
         Path filePath = Path.of("./image", id + "." + getExtension(image.getOriginalFilename()));
@@ -105,14 +101,15 @@ public class AdServiceImpl {
         adEntity.setId(adEntity.getId());
         adEntity.setImage(image.toString());
         adRepository.save(adEntity);
+        return adEntity;
     }
 
-    //    имя файла расширяется
+    //имя файла расширяется
     private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
     //находит объявление по идентификатору
-    public Optional<AdEntity> findOne(long id) {
+    public Optional<AdEntity> findOne(Integer id) {
         return adRepository.findById(id);
     }
 

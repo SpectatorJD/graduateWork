@@ -15,12 +15,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -88,6 +90,10 @@ public class AdController {
 
         @DeleteMapping("{id}")
         public ResponseEntity<Ad> deleteInfoAboutAdById (@PathVariable Integer id){
+            Optional<AdEntity> adEntity = adRepository.findById(id);
+            if (adEntity == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
             adService.deleteInfoAboutAdById(id);
             return ResponseEntity.ok().build();
         }
@@ -134,6 +140,10 @@ public class AdController {
         @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<String> uploadImage (@PathVariable Integer id, @RequestParam MultipartFile image) throws
                 IOException {
+            Optional<AdEntity> adEntity = adRepository.findById(id);
+            if (adEntity == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
             adService.uploadImage(id, image);
             return ResponseEntity.ok().build();
         }
@@ -157,7 +167,6 @@ public class AdController {
             return ResponseEntity.ok(comments);
         }
 
-
         @Operation(summary = "Добавление комментария к объявлению")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",
@@ -168,6 +177,10 @@ public class AdController {
         @PostMapping("/{id}/comments")
         public ResponseEntity<CreateOrUpdateComment> createComment (@PathVariable Integer id, @RequestBody CreateOrUpdateComment
         createComment){
+            Optional<AdEntity> adEntity = adRepository.findById(id);
+            if (adEntity == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
             CreateOrUpdateComment comment = commentService.createComment(id, createComment);
             return ResponseEntity.ok(comment);
         }
@@ -181,6 +194,10 @@ public class AdController {
 
         @DeleteMapping("/{adId}/comments/{commentId}")
         public ResponseEntity<Comment> deleteInfoAboutCommentById (@PathVariable Integer adId, @PathVariable Integer commentId){
+            Optional<AdEntity> adEntity = adRepository.findById(adId);
+            if (adEntity == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
             commentService.deleteInfoAboutCommentById(adId, commentId);
             return ResponseEntity.ok().build();
         }
