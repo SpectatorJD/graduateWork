@@ -22,21 +22,13 @@ public class CommentServiceImpl {
     private final CommentRepository commentRepository;
     private final CommentsMapper commentsMapper;
 
+    //Получение комментариев объявления
+    public Comments getInfoAboutCommitById (Integer id) {
+        List<Comment> collect = commentRepository.findById(id).stream().map(e -> commentsMapper.commentsToDto(e)).collect(Collectors.toList());
+        return new Comments(collect.size(), collect);
+    }
 
-    public Comments getInfoAboutCommitById (Integer id){
-            List<Comment> collect = commentRepository.findById(id).stream().map(e -> commentsMapper.commentsToDto(e)).collect(Collectors.toList());
-
-//            Ad ad = new Ad();
-//            ad.setAuthor(ad.getAuthor());
-//            ad.setPk(ad.getPk());
-//            ad.setImage(ad.getImage());
-//            ad.setTitle(ad.getTitle());
-//            ad.setPrice(ad.getPrice());
-//            return ad;
-//        }).collect(Collectors.toList());
-            return new Comments(collect.size(), collect);
-        }
-
+    //Добавление комментария к объявлению
     public CreateOrUpdateComment createComment (Integer id, CreateOrUpdateComment createComment){
         CommentEntity commentEntity = commentRepository.findById(id).get();
         commentEntity.setText(createComment.getText());
@@ -45,13 +37,14 @@ public class CommentServiceImpl {
 
     }
 
+    //Удаление комментария
     public void deleteInfoAboutCommentById (Integer adId, Integer commentId){
       commentRepository.deleteById(adId, commentId);
 
     }
 
-
-    public List<CreateOrUpdateComment> updateComment (Integer adId, Integer commentId,CreateOrUpdateComment updateComment){
+    //Обновление комментария
+    public CreateOrUpdateComment updateComment (Integer adId, Integer commentId,CreateOrUpdateComment updateComment){
         CommentEntity commentEntity = commentRepository.findByAdIdAndCommentId(adId, commentId).get();
         commentEntity.setText(updateComment.getText());
         commentRepository.save(commentEntity);

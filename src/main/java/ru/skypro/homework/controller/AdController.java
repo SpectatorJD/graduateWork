@@ -167,7 +167,6 @@ public class AdController {
             return ResponseEntity.ok(comments);
         }
 
-
         @Operation(summary = "Добавление комментария к объявлению")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",
