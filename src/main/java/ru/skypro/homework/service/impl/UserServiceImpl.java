@@ -2,31 +2,22 @@ package ru.skypro.homework.service.impl;
 
 import antlr.collections.List;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.AuthService;
 import ru.skypro.homework.service.mappers.UsersMapper;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
-import static org.springframework.data.repository.util.ClassUtils.ifPresent;
 
 @RequiredArgsConstructor
 @Service
@@ -55,7 +46,7 @@ public class UserServiceImpl {
         }
 
 
-        public UpdateUser updateUser(Authentication authentication) {
+        public UpdateUser updateUser(UpdateUser updateUser, Authentication authentication) {
         List<UpdateUser> collect = userRepository.findById(authentication).stream().map(e -> usersMapper.updateUserToDto(e)).collect(Collectors.toList());
             collect =  userRepository.save(authentication);
             return (UpdateUser) collect;
@@ -67,7 +58,7 @@ public class UserServiceImpl {
 //            userRepository.save(image);
 //            return ResponseEntity.ok().build();
 //        }
-    public void updateImage( MultipartFile file, Authentication authentication) throws IOException {
+    public void updateImage(MultipartFile file, Authentication authentication) throws IOException {
     Path filePath = Path.of("./image", authentication + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);

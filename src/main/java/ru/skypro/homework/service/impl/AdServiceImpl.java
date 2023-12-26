@@ -39,14 +39,6 @@ public class AdServiceImpl {
     public Ads getAllInfoAboutAds() {
         List<Ad> collect = adRepository.findAll().stream().map(e -> adsMapper.adsToDto(e)).collect(Collectors.toList());
 
-//            Ad ad = new Ad();
-//            ad.setAuthor(ad.getAuthor());
-//            ad.setPk(ad.getPk());
-//            ad.setImage(ad.getImage());
-//            ad.setTitle(ad.getTitle());
-//            ad.setPrice(ad.getPrice());
-//            return ad;
-//        }).collect(Collectors.toList());
         return new Ads(collect.size(), collect);
     }
 
@@ -62,18 +54,18 @@ public class AdServiceImpl {
 
 
 
-    public ExtendedAd getInfoExtendedAdById(Long id) {
+    public ExtendedAd getInfoExtendedAdById(Integer id) {
            List<ExtendedAd> collect = adRepository.findById(id).stream().map(e -> adsMapper.extendAdToDto(e)).collect(Collectors.toList());
             return (ExtendedAd) collect;
         }
 
 
-    public void deleteInfoAboutAdById(Long id) {
+    public void deleteInfoAboutAdById(Integer id) {
          adRepository.deleteById(id);
     }
 
 
-    public CreateOrUpdateAd updateAd(Long id, CreateOrUpdateAd updateAd) {
+    public CreateOrUpdateAd updateAd(Integer id, CreateOrUpdateAd updateAd) {
         AdEntity adEntity = adRepository.findById(id).get();
         adEntity.setTitle(updateAd.getTitle());
         adEntity.setPrice(updateAd.getPrice());
@@ -97,7 +89,7 @@ public class AdServiceImpl {
         }
 
 // загружает картинку
-    public AdEntity uploadImage(Long id, MultipartFile image) throws
+    public AdEntity uploadImage(Integer id, MultipartFile image) throws
             IOException {
         Path filePath = Path.of("./image", id + "." + getExtension(image.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());

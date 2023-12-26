@@ -56,7 +56,8 @@ public class UsersController {
 
     @GetMapping("/me")
 public ResponseEntity<User> getMe(Authentication authentication) {
-        return ResponseEntity.ok(getMe().getBody());
+    User user = userService.getMe(authentication);
+        return ResponseEntity.ok(user);
     }
 
 
@@ -69,11 +70,11 @@ public ResponseEntity<User> getMe(Authentication authentication) {
 
 @PatchMapping("/me")
 public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser, Authentication authentication) {
-    UpdateUser foundUpdateUser = userService.updateUser(updateUser);
+    UpdateUser foundUpdateUser = userService.updateUser(updateUser,authentication);
     if (foundUpdateUser == null) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-    return ResponseEntity.ok(updateUser);
+    return ResponseEntity.ok(foundUpdateUser);
 }
 
 
@@ -84,7 +85,7 @@ public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser,
 
 @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 public ResponseEntity<String> updateImage (@RequestParam MultipartFile image, Authentication authentication) throws IOException {
-    userService.updateImage(image);
-    return ResponseEntity.ok().build();
+    String photo = userService.updateImage(image,authentication);
+    return ResponseEntity.ok(photo);
 }
 }

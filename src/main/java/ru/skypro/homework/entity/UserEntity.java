@@ -21,31 +21,22 @@ public class UserEntity {
     @GeneratedValue
     @Column(name = "id")
     private Integer id;
-//    id	integer($int32)
-//    id пользователя
+
 @Column(name = "emile")
     private String emile;
-//    email	string
-//    логин пользователя
+
 @Column(name = "first_name")
     private String firstName;
-//    firstName	string
-//    имя пользователя
+
 @Column(name = "last_name")
     private String lastName;
-//    lastName	string
-//    фамилия пользователя
+
 @Column(name = "phone")
     private String phone;
-//    phone	string
-//    телефон пользователя
+
 @Column(name = "role")
     private Role role;
-//    role	string
-//    роль пользователя
-//
-//    Enum:
-//            [ USER, ADMIN ]
+
 @Column(name = "image")
     private String image;
 //    image	string
@@ -55,8 +46,8 @@ public class UserEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEntity user = (UserEntity) o;
-        return Objects.equals(id, user.id) && Objects.equals(emile, user.emile) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && role == user.role && Objects.equals(image, user.image);
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(emile, that.emile) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(phone, that.phone) && role == that.role && Objects.equals(image, that.image);
     }
 
     @Override
