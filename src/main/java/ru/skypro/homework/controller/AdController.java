@@ -27,13 +27,16 @@ import java.util.Optional;
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @RequestMapping("/ads")
 public class AdController {
-    private final AdRepository adRepository;
     private final AdServiceImpl adService;
     private final CommentServiceImpl commentService;
 
+    public AdController(AdServiceImpl adService, CommentServiceImpl commentService) {
+        this.adService = adService;
+        this.commentService = commentService;
+    }
 
     @Operation(summary = "Получение всех объявлений")
     @ApiResponses(value = {
@@ -56,7 +59,7 @@ public class AdController {
 
         @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         ResponseEntity<CreateOrUpdateAd> addAd(@RequestPart(value = "properties", required = true) CreateOrUpdateAd properties,
-                                 @RequestPart(value = "image", required = true) MultipartFile image) {
+                                 @RequestPart(value = "image", required = true) MultipartFile image) throws IOException {
                 CreateOrUpdateAd createAd = adService.createAd(properties,image);
                 return ResponseEntity.ok(createAd);
             }
@@ -90,7 +93,7 @@ public class AdController {
 
         @DeleteMapping("{id}")
         public ResponseEntity<Ad> deleteInfoAboutAdById (@PathVariable Integer id){
-            Optional<AdEntity> adEntity = adRepository.findById(id);
+            Optional<AdEntity> adEntity = adService.findOne(id);
             if (adEntity == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -116,31 +119,31 @@ public class AdController {
             return ResponseEntity.ok(foundAd);
         }
 
-        @Operation(summary = "Получение объявлений авторизованного пользователя")
-        @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "OK",
-                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                array = @ArraySchema(schema = @Schema(implementation = Ads.class)))),
-                @ApiResponse(responseCode = "401", description = "Unauthorized")})
-        @GetMapping("/me")
-        public ResponseEntity<Ads> getMe (Authentication authentication) {
-        Ads ads = adService.getMe(authentication);
-        return ResponseEntity.ok(ads);
-        }
+//        @Operation(summary = "Получение объявлений авторизованного пользователя")
+//        @ApiResponses(value = {
+//                @ApiResponse(responseCode = "200", description = "OK",
+//                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+//                                array = @ArraySchema(schema = @Schema(implementation = Ads.class)))),
+//                @ApiResponse(responseCode = "401", description = "Unauthorized")})
+//        @GetMapping("/me")
+//        public ResponseEntity<Ads> getMe (Authentication authentication) {
+//        Ads ads = adService.getMe(authentication);
+//        return ResponseEntity.ok(ads);
+//        }
 
         @Operation(summary = "Обновление картинки объявления")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "OK",
                         content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                                array = @ArraySchema(schema = @Schema(implementation = "String")))),
+                                array = @ArraySchema(schema = @Schema(implementation = Image.class)))),
                 @ApiResponse(responseCode = "401", description = "Unauthorized"),
                 @ApiResponse(responseCode = "403", description = "Forbidden"),
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
         @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-        public ResponseEntity<String> uploadImage (@PathVariable Integer id, @RequestParam MultipartFile image) throws
+        public ResponseEntity<Image> updateImage (@PathVariable Integer id, @RequestParam MultipartFile image) throws
                 IOException {
-            Optional<AdEntity> adEntity = adRepository.findById(id);
+            Optional<AdEntity> adEntity = adService.findOne(id);
             if (adEntity == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -148,7 +151,7 @@ public class AdController {
             return ResponseEntity.ok().build();
         }
 
-        //Comments
+ //       Comments
 
         @Operation(summary = "Получение комментариев объявления")
         @ApiResponses(value = {
@@ -177,7 +180,7 @@ public class AdController {
         @PostMapping("/{id}/comments")
         public ResponseEntity<CreateOrUpdateComment> createComment (@PathVariable Integer id, @RequestBody CreateOrUpdateComment
         createComment){
-            Optional<AdEntity> adEntity = adRepository.findById(id);
+            Optional<AdEntity> adEntity = adService.findOne(id);
             if (adEntity == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -193,8 +196,9 @@ public class AdController {
                 @ApiResponse(responseCode = "404", description = "Not found")})
 
         @DeleteMapping("/{adId}/comments/{commentId}")
-        public ResponseEntity<Comment> deleteInfoAboutCommentById (@PathVariable Integer adId, @PathVariable Integer commentId){
-            Optional<AdEntity> adEntity = adRepository.findById(adId);
+        public ResponseEntity<Comment> deleteInfoAboutCommentById (@PathVariable Integer adId,
+                                                                   @PathVariable Integer commentId){
+            Optional<AdEntity> adEntity = adService.findOne(adId);
             if (adEntity == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -202,23 +206,23 @@ public class AdController {
             return ResponseEntity.ok().build();
         }
 
-        @Operation(summary = "Обновление комментария")
-        @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "OK",
-                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                array = @ArraySchema(schema = @Schema(implementation = Comment.class)))),
-                @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                @ApiResponse(responseCode = "403", description = "Forbidden"),
-                @ApiResponse(responseCode = "404", description = "Not found")})
-
-        @PatchMapping("/{adId}/comments/{commentId}")
-        public ResponseEntity<CreateOrUpdateComment> UpdateComment (@PathVariable Integer adId,
-            @PathVariable Integer commentId,@RequestBody CreateOrUpdateComment updateComment){
-             CommentEntity commentEntity = (CommentEntity) commentService.updateComment(adId, commentId, updateComment);
-            if (commentEntity == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-            return ResponseEntity.ok(updateComment);
-        }
+//        @Operation(summary = "Обновление комментария")
+//        @ApiResponses(value = {
+//                @ApiResponse(responseCode = "200", description = "OK",
+//                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+//                                array = @ArraySchema(schema = @Schema(implementation = Comment.class)))),
+//                @ApiResponse(responseCode = "401", description = "Unauthorized"),
+//                @ApiResponse(responseCode = "403", description = "Forbidden"),
+//                @ApiResponse(responseCode = "404", description = "Not found")})
+//
+//        @PatchMapping("/{adId}/comments/{commentId}")
+//        public ResponseEntity<CreateOrUpdateComment> UpdateComment (@PathVariable Integer adId,
+//            @PathVariable Integer commentId,@RequestBody CreateOrUpdateComment updateComment){
+//             CommentEntity commentEntity = (CommentEntity) commentService.updateComment(adId, commentId, updateComment);
+//            if (commentEntity == null) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//            }
+//            return ResponseEntity.ok(updateComment);
+//        }
     }
 

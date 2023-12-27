@@ -7,13 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrUpdateComment {
-
- private String Text;
-//    text*	string
-//    minLength: 8
-//    maxLength: 64
-//    текст комментария
-
-
+public class Image {
+        private String image;
+//    private Byte[] image;
+    //    image	string
+//    ссылка на картинку объявления
 }
