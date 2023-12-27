@@ -15,6 +15,7 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Ads {
 
     private Integer count;

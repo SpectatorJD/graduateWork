@@ -3,6 +3,7 @@ package ru.skypro.homework.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.Column;
@@ -22,25 +23,26 @@ public class UserEntity {
     @Column(name = "id")
     private Integer id;
 
-@Column(name = "emile")
+    @Column(name = "emile")
     private String emile;
 
-@Column(name = "first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-@Column(name = "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-@Column(name = "phone")
+    @Column(name = "phone")
     private String phone;
 
-@Column(name = "role")
+    @Column(name = "role")
     private Role role;
 
-@Column(name = "image")
-    private String image;
-//    image	string
-//    ссылка на аватар пользователя
+    @Type(type = "org.hibernate.type.BinaryType")
+    @Column(name = "image")
+    //    private String image;
+        private Byte[] image;
+
 
     @Override
     public boolean equals(Object o) {

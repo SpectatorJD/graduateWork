@@ -1,8 +1,12 @@
 package ru.skypro.homework.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     private Integer id;
@@ -32,9 +36,10 @@ public class User {
 //    Enum:
 //            [ USER, ADMIN ]
 
-    private String image;
-//    image	string
-//    ссылка на аватар пользователя
+//    private String image;
+    private Byte[] image;
+    //    image	string
+//    ссылка на картинку объявления
 
 
 }

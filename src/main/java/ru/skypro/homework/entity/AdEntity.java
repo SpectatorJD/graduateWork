@@ -3,6 +3,7 @@ package ru.skypro.homework.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -22,8 +23,10 @@ public class AdEntity {
     @Column(name = "author")
     private UserEntity author;
 
+    @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "image")
-    private String image;
+    //    private String image;
+    private Byte[] image;
 
     @OneToOne
     @Column(name = "pk")
