@@ -9,6 +9,7 @@ import ru.skypro.homework.dto.Role;
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,7 +48,7 @@ public class UserEntity {
 
     @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "image")
-        private Byte[] image;
+    private Byte[] image;
 
     public void setPhone(String phone) {
         if (!phone.matches("\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")) {

@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
+
 //@RequiredArgsConstructor
 @Service
 public class AdServiceImpl {
@@ -48,39 +49,39 @@ public class AdServiceImpl {
     }
 
     //Добавление объявления
-        public CreateOrUpdateAd createAd (CreateOrUpdateAd createAd, MultipartFile image) throws IOException {
+    public CreateOrUpdateAd createAd(CreateOrUpdateAd createAd, MultipartFile image) throws IOException {
 
-            Path filePath = Path.of("./image",  "." + getExtension(image.getOriginalFilename()));
-            Files.createDirectories(filePath.getParent());
-            Files.deleteIfExists(filePath);
-            try (InputStream is = image.getInputStream();
-                 OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-                 BufferedInputStream bis = new BufferedInputStream(is, 1024);
-                 BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
-            ) {
-                bis.transferTo(bos);
-            }
+        Path filePath = Path.of("./image", "." + getExtension(image.getOriginalFilename()));
+        Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+        try (InputStream is = image.getInputStream();
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+        ) {
+            bis.transferTo(bos);
+        }
 
-            AdEntity adEntity = new AdEntity();
-            adEntity.setTitle(createAd.getTitle());
-            adEntity.setPrice(createAd.getPrice());
-            adEntity.setDescription(createAd.getDescription());
-            adEntity.setImage(image.getBytes());
-            adRepository.save(adEntity);
-            return  adsMapper.updateAdToDto(adEntity);
+        AdEntity adEntity = new AdEntity();
+        adEntity.setTitle(createAd.getTitle());
+        adEntity.setPrice(createAd.getPrice());
+        adEntity.setDescription(createAd.getDescription());
+        adEntity.setImage(image.getBytes());
+        adRepository.save(adEntity);
+        return adsMapper.updateAdToDto(adEntity);
 
 
     }
 
     //Получение информации об объявлении
     public ExtendedAd getInfoExtendedAdById(Integer id) {
-           List<ExtendedAd> collect = adRepository.findById(id).stream().map(adsMapper::extendAdToDto).collect(Collectors.toList());
-            return (ExtendedAd) collect;
-        }
+        List<ExtendedAd> collect = adRepository.findById(id).stream().map(adsMapper::extendAdToDto).collect(Collectors.toList());
+        return (ExtendedAd) collect;
+    }
 
-        //Удаление объявления
+    //Удаление объявления
     public void deleteInfoAboutAdById(Integer id) {
-         adRepository.deleteById(id);
+        adRepository.deleteById(id);
     }
 
     //Обновление информации об объявлении
@@ -90,10 +91,10 @@ public class AdServiceImpl {
         adEntity.setPrice(updateAd.getPrice());
         adEntity.setDescription(updateAd.getDescription());
         adRepository.save(adEntity);
-        return  adsMapper.updateAdToDto(adEntity);
-        }
+        return adsMapper.updateAdToDto(adEntity);
+    }
 
-        //Получение объявлений авторизованного пользовател
+    //Получение объявлений авторизованного пользовател
 //    public Ads getMe(Authentication authentication) {
 //            List<Ad> collect = adRepository.findById(authentication.).stream().map(e -> {
 //                Ad ad = new Ad();
@@ -107,7 +108,7 @@ public class AdServiceImpl {
 //            return new Ads(collect.size(),collect);
 //        }
 
-// Обновление картинки объявления
+    // Обновление картинки объявления
     public Image uploadImage(Integer id, MultipartFile image) throws
             IOException {
         AdEntity adEntityId = findAd(id);
@@ -117,7 +118,7 @@ public class AdServiceImpl {
         try (InputStream is = image.getInputStream();
              OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
              BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
         ) {
             bis.transferTo(bos);
         }
@@ -144,4 +145,4 @@ public class AdServiceImpl {
     public AdEntity findAd(Integer id) {
         return adRepository.findById(id).get();
     }
-    }
+}

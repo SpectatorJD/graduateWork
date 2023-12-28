@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateOrUpdateAd {
 
-   private String title;
+    private String title;
 
-   private Integer price;
+    private Integer price;
 
-   private String description;
+    private String description;
 
 }

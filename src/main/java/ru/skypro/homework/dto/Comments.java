@@ -11,7 +11,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class Comments {
 
-  private Integer count;
+    private Integer count;
 
-  private Collection<Comment> results;
+    private Collection<Comment> results;
 }

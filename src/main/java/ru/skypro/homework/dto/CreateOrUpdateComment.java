@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateOrUpdateComment {
 
- private String Text;
+    private String Text;
 
 }

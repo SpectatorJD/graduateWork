@@ -1,18 +1,14 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.*;
-import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.Comments;
+import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.mappers.CommentsMapper;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,32 +19,32 @@ public class CommentServiceImpl {
     private final CommentsMapper commentsMapper;
 
     //Получение комментариев объявления
-    public Comments getInfoAboutCommitById (Integer id) {
+    public Comments getInfoAboutCommitById(Integer id) {
         List<Comment> collect = commentRepository.findById(id).stream().map(e -> commentsMapper.commentsToDto(e)).collect(Collectors.toList());
         return new Comments(collect.size(), collect);
     }
 
     //Добавление комментария к объявлению
-    public CreateOrUpdateComment createComment (Integer id, CreateOrUpdateComment createComment){
+    public CreateOrUpdateComment createComment(Integer id, CreateOrUpdateComment createComment) {
         CommentEntity commentEntity = commentRepository.findById(id).get();
         commentEntity.setText(createComment.getText());
         commentRepository.save(commentEntity);
-        return  commentsMapper.updateCommentToDto(commentEntity);
+        return commentsMapper.updateCommentToDto(commentEntity);
 
     }
 
     //Удаление комментария
-    public void deleteInfoAboutCommentById (Integer adId, Integer commentId){
-      commentRepository.deleteById(adId, commentId);
+    public void deleteInfoAboutCommentById(Integer adId, Integer commentId) {
+        commentRepository.deleteById(adId, commentId);
 
     }
 
     //Обновление комментария
-    public CreateOrUpdateComment updateComment (Integer adId, Integer commentId,CreateOrUpdateComment updateComment){
+    public CreateOrUpdateComment updateComment(Integer adId, Integer commentId, CreateOrUpdateComment updateComment) {
         CommentEntity commentEntity = commentRepository.findByAdIdAndCommentId(adId, commentId).get();
         commentEntity.setText(updateComment.getText());
         commentRepository.save(commentEntity);
         return commentsMapper.updateCommentToDto(commentEntity);
-}
+    }
 }
 
