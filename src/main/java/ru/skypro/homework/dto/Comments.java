@@ -12,17 +12,6 @@ import java.util.Collection;
 public class Comments {
 
   private Integer count;
-//    count	integer($int32)
-//    общее количество комментариев
 
   private Collection<Comment> results;
-//    results	[Comment{Jump to definition
-//        author	[...]
-//        authorImage	[...]
-//        authorFirstName	[...]
-//        createdAt	[...]
-//        pk	[...]
-//        text	[...]
-//
-//    }]
 }

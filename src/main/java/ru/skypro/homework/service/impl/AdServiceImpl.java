@@ -74,7 +74,7 @@ public class AdServiceImpl {
 
     //Получение информации об объявлении
     public ExtendedAd getInfoExtendedAdById(Integer id) {
-           List<ExtendedAd> collect = adRepository.findById(id).stream().map(e -> adsMapper.extendAdToDto(e)).collect(Collectors.toList());
+           List<ExtendedAd> collect = adRepository.findById(id).stream().map(adsMapper::extendAdToDto).collect(Collectors.toList());
             return (ExtendedAd) collect;
         }
 
