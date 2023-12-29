@@ -9,11 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateOrUpdateComment {
 
- private String Text;
-//    text*	string
-//    minLength: 8
-//    maxLength: 64
-//    текст комментария
-
+    private String Text;
 
 }

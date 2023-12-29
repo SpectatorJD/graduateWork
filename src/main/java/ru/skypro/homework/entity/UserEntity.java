@@ -6,11 +6,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import ru.skypro.homework.dto.Role;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +18,7 @@ import java.util.Objects;
 public class UserEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -38,23 +37,38 @@ public class UserEntity {
     @Column(name = "role")
     private Role role;
 
+    @Column(name = "current_password")
+    private Role currentPassword;
+
+    @Column(name = "new_password")
+    private Role newPassword;
+
+    @Column(name = "username")
+    private Role username;
+
     @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "image")
-    //    private String image;
-        private Byte[] image;
+    private Byte[] image;
 
+    public void setPhone(String phone) {
+        if (!phone.matches("\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")) {
+            throw new IllegalArgumentException("Неверно набран номер");
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(emile, that.emile) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(phone, that.phone) && role == that.role && Objects.equals(image, that.image);
+        return Objects.equals(id, that.id) && Objects.equals(emile, that.emile) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(phone, that.phone) && role == that.role && currentPassword == that.currentPassword && newPassword == that.newPassword && username == that.username && Arrays.equals(image, that.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, emile, firstName, lastName, phone, role, image);
+        int result = Objects.hash(id, emile, firstName, lastName, phone, role, currentPassword, newPassword, username);
+        result = 31 * result + Arrays.hashCode(image);
+        return result;
     }
 
     @Override
@@ -66,7 +80,10 @@ public class UserEntity {
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", role=" + role +
-                ", image='" + image + '\'' +
+                ", currentPassword=" + currentPassword +
+                ", newPassword=" + newPassword +
+                ", username=" + username +
+                ", image=" + Arrays.toString(image) +
                 '}';
     }
 }

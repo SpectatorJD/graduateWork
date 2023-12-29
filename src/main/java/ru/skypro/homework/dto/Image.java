@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Image {
-        private String image;
-//    private Byte[] image;
-    //    image	string
-//    ссылка на картинку объявления
+
+    private String image;
 }

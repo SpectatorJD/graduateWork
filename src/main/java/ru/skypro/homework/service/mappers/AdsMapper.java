@@ -10,11 +10,11 @@ import ru.skypro.homework.entity.AdEntity;
 
 @Mapper(componentModel = "spring")
 public interface AdsMapper {
-    Image updateImageToDto(AdEntity adEntity) ;
+    Image updateImageToDto(AdEntity adEntity);
 
     Ad adsToDto(AdEntity adEntity);
 
     ExtendedAd extendAdToDto(AdEntity adEntity);
 
-    CreateOrUpdateAd updateAdToDto (AdEntity adEntity);
+    CreateOrUpdateAd updateAdToDto(AdEntity adEntity);
 }

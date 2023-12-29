@@ -11,18 +11,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class Comments {
 
-  private Integer count;
-//    count	integer($int32)
-//    общее количество комментариев
+    private Integer count;
 
-  private Collection<Comment> results;
-//    results	[Comment{Jump to definition
-//        author	[...]
-//        authorImage	[...]
-//        authorFirstName	[...]
-//        createdAt	[...]
-//        pk	[...]
-//        text	[...]
-//
-//    }]
+    private Collection<Comment> results;
 }

@@ -1,8 +1,8 @@
 package ru.skypro.homework.service.mappers;
 
 import org.mapstruct.Mapper;
-import ru.skypro.homework.dto.*;
-import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.dto.UpdateUser;
+import ru.skypro.homework.dto.User;
 import ru.skypro.homework.entity.UserEntity;
 
 @Mapper(componentModel = "spring")
@@ -11,6 +11,6 @@ public interface UsersMapper {
 
 //    ExtendedAd extendAdToDto(UserEntity userEntity);
 
-    UpdateUser updateUserToDto (UserEntity userEntity);
+    UpdateUser updateUserToDto(UserEntity userEntity);
 }
 
