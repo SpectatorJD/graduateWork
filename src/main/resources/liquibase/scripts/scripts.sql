@@ -20,7 +20,7 @@
  commentId integer,
  author integer references ads(id),
  author_image bytea,
- author_first_name text,
+ author_first_name char(3,10),
  create_at timestamp,
  pk integer references ads(id),
  text char(8,64),

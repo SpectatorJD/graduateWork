@@ -1,7 +1,7 @@
 package ru.skypro.homework.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import ru.skypro.homework.dto.Role;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -50,10 +50,62 @@ public class UserEntity {
     @Column(name = "image")
     private Byte[] image;
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setEmile(String emile) {
+        this.emile = emile;
+    }
+
+    public void setFirstName(String firstName) {
+        if (firstName.length() <= 3 || firstName.length() >= 10) {
+            throw new IllegalArgumentException("Имя должен состоять от 3 до 10 символов");
+        }
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        if (lastName.length() <= 3 || lastName.length() >= 10) {
+            throw new IllegalArgumentException("Фамилия должен состоять от 3 до 10 символов");
+        }
+        this.lastName = lastName;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setCurrentPassword(Role currentPassword) {
+        if (lastName.length() <= 8 || lastName.length() >= 16) {
+            throw new IllegalArgumentException("Текущий пароль должен состоять от 8 до 16 символов");
+        }
+        this.currentPassword = currentPassword;
+    }
+
+    public void setNewPassword(Role newPassword) {
+        if (lastName.length() <= 8 || lastName.length() >= 16) {
+            throw new IllegalArgumentException("Новый пароль должен состоять от 8 до 16 символов");
+        }
+        this.newPassword = newPassword;
+    }
+
+    public void setUsername(Role username) {
+        if (lastName.length() <= 4 || lastName.length() >= 32) {
+            throw new IllegalArgumentException("Имя пользователя должен состоять от 4 до 32 символов");
+        }
+        this.username = username;
+    }
+
+    public void setImage(Byte[] image) {
+        this.image = image;
+    }
+
     public void setPhone(String phone) {
         if (!phone.matches("\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")) {
             throw new IllegalArgumentException("Неверно набран номер");
         }
+        this.phone = phone;
     }
 
     @Override
