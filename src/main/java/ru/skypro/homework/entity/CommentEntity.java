@@ -1,14 +1,14 @@
 package ru.skypro.homework.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -48,6 +48,47 @@ public class CommentEntity {
     @Column(name = "text")
     private String text;
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
+    }
+
+    public void setAdEntity(AdEntity adEntity) {
+        this.adEntity = adEntity;
+    }
+
+    public void setAuthor(AdEntity author) {
+        this.author = author;
+    }
+
+    public void setAuthorImage(String authorImage) {
+        this.authorImage = authorImage;
+    }
+
+    public void setAuthorFirstName(String authorFirstName) {
+        if (authorFirstName.length() <= 3 || authorFirstName.length() >= 10) {
+            throw new IllegalArgumentException("Имя должен состоять от 3 до 10 символов");
+        }
+        this.authorFirstName = authorFirstName;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
+    public void setPk(AdEntity pk) {
+        this.pk = pk;
+    }
+
+    public void setText(String text) {
+        if (text.length() <= 8 || text.length() >= 64) {
+            throw new IllegalArgumentException("Текст должен состоять из 8-64 символов");
+        }
+        this.text = text;
+    }
 
     @Override
     public boolean equals(Object o) {
