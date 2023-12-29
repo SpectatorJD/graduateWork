@@ -4,6 +4,9 @@
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.stereotype.Service;
 //import org.springframework.web.multipart.MultipartFile;
 //import ru.skypro.homework.dto.*;
@@ -25,10 +28,16 @@
 //
 //    private final UserRepository userRepository;
 //    private final UsersMapper usersMapper;
+//    private final UserDetailsService userDetailsService;
 //
 //
 //    @Value("${image.dir.path}")
 //    private String imagesDir;
+//
+//    private String objectAuthentication() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        return ((UserDetails) authentication.getPrincipal()).getUsername();
+//    }
 //
 //    //Обновление пароля
 //    public NewPassword changePassword( NewPassword newPassword, Authentication authentication) {
