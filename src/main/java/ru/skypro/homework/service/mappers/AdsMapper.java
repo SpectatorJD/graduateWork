@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
-import ru.skypro.homework.dto.Image;
+import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.AdEntity;
 
 

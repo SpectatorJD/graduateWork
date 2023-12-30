@@ -29,9 +29,8 @@ public class AdEntity {
     @Column(name = "pk")
     private AdEntity pk;
 
-    @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "image")
-    private Byte[] image;
+    private String image;
 
     @Column(name = "price")
     private Integer price;
@@ -66,7 +65,7 @@ public class AdEntity {
         this.pk = pk;
     }
 
-    public void setImage(Byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -121,14 +120,12 @@ public class AdEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AdEntity adEntity = (AdEntity) o;
-        return Objects.equals(id, adEntity.id) && Objects.equals(author, adEntity.author) && Objects.equals(pk, adEntity.pk) && Arrays.equals(image, adEntity.image) && Objects.equals(price, adEntity.price) && Objects.equals(title, adEntity.title) && Objects.equals(description, adEntity.description) && Objects.equals(authorFirstName, adEntity.authorFirstName) && Objects.equals(authorLastName, adEntity.authorLastName) && Objects.equals(email, adEntity.email) && Objects.equals(phone, adEntity.phone);
+        return Objects.equals(id, adEntity.id) && Objects.equals(author, adEntity.author) && Objects.equals(pk, adEntity.pk) && Objects.equals(image, adEntity.image) && Objects.equals(price, adEntity.price) && Objects.equals(title, adEntity.title) && Objects.equals(description, adEntity.description) && Objects.equals(authorFirstName, adEntity.authorFirstName) && Objects.equals(authorLastName, adEntity.authorLastName) && Objects.equals(email, adEntity.email) && Objects.equals(phone, adEntity.phone);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, author, pk, price, title, description, authorFirstName, authorLastName, email, phone);
-        result = 31 * result + Arrays.hashCode(image);
-        return result;
+        return Objects.hash(id, author, pk, image, price, title, description, authorFirstName, authorLastName, email, phone);
     }
 
     @Override
@@ -137,7 +134,7 @@ public class AdEntity {
                 "id=" + id +
                 ", author=" + author +
                 ", pk=" + pk +
-                ", image=" + Arrays.toString(image) +
+                ", image='" + image + '\'' +
                 ", price=" + price +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

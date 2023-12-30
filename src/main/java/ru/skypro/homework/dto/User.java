@@ -21,7 +21,7 @@ public class User {
 
     private Role role;
 
-    private Byte[] image;
+    private String image;
 
 
 }

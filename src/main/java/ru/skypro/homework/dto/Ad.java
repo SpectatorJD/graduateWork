@@ -12,7 +12,7 @@ public class Ad {
 
     private Integer author;
 
-    private Byte[] image;
+    private String image;
 
     private Integer pk;
 

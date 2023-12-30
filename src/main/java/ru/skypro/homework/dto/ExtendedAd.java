@@ -19,7 +19,7 @@ public class ExtendedAd {
 
     private String email;
 
-    private Byte[] image;
+    private String image;
 
     private String phone;
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
@@ -136,15 +137,20 @@ public class AdController {
             @ApiResponse(responseCode = "404", description = "Not found")})
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Image> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws
+    public ResponseEntity<String> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws
             IOException {
-        Optional<AdEntity> adEntity = adService.findOne(id);
-        if (adEntity == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (image.getSize() > 1024 * 300) {
+            return ResponseEntity.badRequest().body("file is too big");
         }
         adService.uploadImage(id, image);
         return ResponseEntity.ok().build();
     }
+//        Optional<AdEntity> adEntity = adService.findOne(id);
+//        if (adEntity == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//        adService.uploadImage(id, image);
+//        return ResponseEntity.ok().build();
 
     //       Comments
 

@@ -1,12 +1,16 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.mappers.AdsMapper;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,15 +26,17 @@ public class AdServiceImpl {
 
     private final AdRepository adRepository;
     private final AdsMapper adsMapper;
+    private final ImageRepository imageRepository;
 
-    public AdServiceImpl(AdRepository adRepository, AdsMapper adsMapper) {
+    public AdServiceImpl(AdRepository adRepository, AdsMapper adsMapper, ImageRepository imageRepository) {
         this.adRepository = adRepository;
         this.adsMapper = adsMapper;
+        this.imageRepository = imageRepository;
 
     }
 
-//    @Value("${image.dir.path}")
-//    private String imagesDir;
+    @Value("${image.dir.path}")
+    private String imagesDir;
 
     //Получение всех объявлений
     public Ads getAllInfoAboutAds() {
@@ -51,22 +57,22 @@ public class AdServiceImpl {
     //Добавление объявления
     public CreateOrUpdateAd createAd(CreateOrUpdateAd createAd, MultipartFile image) throws IOException {
 
-        Path filePath = Path.of("./image", "." + getExtension(image.getOriginalFilename()));
-        Files.createDirectories(filePath.getParent());
-        Files.deleteIfExists(filePath);
-        try (InputStream is = image.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-        ) {
-            bis.transferTo(bos);
-        }
+//        Path filePath = Path.of("./image", "." + getExtension(image.getOriginalFilename()));
+//        Files.createDirectories(filePath.getParent());
+//        Files.deleteIfExists(filePath);
+//        try (InputStream is = image.getInputStream();
+//             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+//             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+//             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+//        ) {
+//            bis.transferTo(bos);
+//        }
 
         AdEntity adEntity = new AdEntity();
         adEntity.setTitle(createAd.getTitle());
         adEntity.setPrice(createAd.getPrice());
         adEntity.setDescription(createAd.getDescription());
-        adEntity.setImage(image.getBytes());
+//        adEntity.setImage(image.getBytes());
         adRepository.save(adEntity);
         return adsMapper.updateAdToDto(adEntity);
 
@@ -109,27 +115,28 @@ public class AdServiceImpl {
 //        }
 
     // Обновление картинки объявления
-    public Image uploadImage(Integer id, MultipartFile image) throws
+    public void uploadImage(Integer adId, MultipartFile file) throws
             IOException {
-        AdEntity adEntityId = findAd(id);
-        Path filePath = Path.of("./image", id + "." + getExtension(image.getOriginalFilename()));
+        AdEntity ad = findAd(adId);
+        Path filePath = Path.of("./avatar", adId + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
-        try (InputStream is = image.getInputStream();
+        try (InputStream is = file.getInputStream();
              OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
              BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
         ) {
             bis.transferTo(bos);
         }
-        Image photo = new Image();
-        photo.getImage(image.getBytes());
-
-        AdEntity adEntity = adRepository.findById(id).orElseGet(AdEntity::new);
-        adEntity.setImage(photo.getImage());
-        adRepository.save(adEntity);
-        return adsMapper.updateImageToDto(adEntity);
+        Image image = imageRepository.findByAdId(adId).orElseGet(Image::new);
+        image.setAdEntity(ad);
+        image.setFilePath(filePath.toString());
+        image.setFileSize(file.getSize());
+        image.setMediaType(file.getContentType());
+        image.setData(file.getBytes());
+        imageRepository.save(image);
     }
+
 
     //имя файла расширяется
     private String getExtension(String fileName) {
