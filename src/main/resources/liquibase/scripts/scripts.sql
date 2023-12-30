@@ -12,7 +12,7 @@
  author_first_name char(8,64),
  author_last_name char(8,64),
  email text,
- phone varchar(\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2})
+ phone varchar(11)
  );
 
  create table comments(
@@ -32,8 +32,8 @@
  emile text,
  first_name char(3,10),
  last_name char(3,10),
- phone varchar(\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}),
- role text, --role
+ phone varchar(11),
+ role text,
  image bytea,
  currentPassword char(8,16),
  newPassword char(8,16)

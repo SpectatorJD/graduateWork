@@ -46,9 +46,8 @@ public class UserEntity {
     @Column(name = "username")
     private Role username;
 
-    @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "image")
-    private Byte[] image;
+    private String image;
 
     public void setId(Integer id) {
         this.id = id;
@@ -97,7 +96,7 @@ public class UserEntity {
         this.username = username;
     }
 
-    public void setImage(Byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -113,14 +112,12 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(emile, that.emile) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(phone, that.phone) && role == that.role && currentPassword == that.currentPassword && newPassword == that.newPassword && username == that.username && Arrays.equals(image, that.image);
+        return Objects.equals(id, that.id) && Objects.equals(emile, that.emile) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(phone, that.phone) && role == that.role && currentPassword == that.currentPassword && newPassword == that.newPassword && username == that.username && Objects.equals(image, that.image);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, emile, firstName, lastName, phone, role, currentPassword, newPassword, username);
-        result = 31 * result + Arrays.hashCode(image);
-        return result;
+        return Objects.hash(id, emile, firstName, lastName, phone, role, currentPassword, newPassword, username, image);
     }
 
     @Override
@@ -135,7 +132,7 @@ public class UserEntity {
                 ", currentPassword=" + currentPassword +
                 ", newPassword=" + newPassword +
                 ", username=" + username +
-                ", image=" + Arrays.toString(image) +
+                ", image='" + image + '\'' +
                 '}';
     }
 }
