@@ -139,18 +139,17 @@ public class AdController {
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws
             IOException {
-        if (image.getSize() > 1024 * 300) {
-            return ResponseEntity.badRequest().body("file is too big");
+        Optional<AdEntity> adEntity = adService.findOne(id);
+        if (adEntity == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+//        if (image.getSize() > 1024 * 300) {
+//            return ResponseEntity.badRequest().body("file is too big");
+//        }
         adService.uploadImage(id, image);
         return ResponseEntity.ok().build();
     }
-//        Optional<AdEntity> adEntity = adService.findOne(id);
-//        if (adEntity == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//        adService.uploadImage(id, image);
-//        return ResponseEntity.ok().build();
+
 
     //       Comments
 
