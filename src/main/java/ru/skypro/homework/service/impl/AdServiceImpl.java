@@ -55,18 +55,7 @@ public class AdServiceImpl {
     }
 
     //Добавление объявления
-    public CreateOrUpdateAd createAd(CreateOrUpdateAd createAd, MultipartFile image) throws IOException {
-
-//        Path filePath = Path.of("./image", "." + getExtension(image.getOriginalFilename()));
-//        Files.createDirectories(filePath.getParent());
-//        Files.deleteIfExists(filePath);
-//        try (InputStream is = image.getInputStream();
-//             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-//             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-//             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-//        ) {
-//            bis.transferTo(bos);
-//        }
+    public CreateOrUpdateAd createAd(CreateOrUpdateAd createAd, MultipartFile file) throws IOException {
 
         AdEntity adEntity = new AdEntity();
         adEntity.setTitle(createAd.getTitle());
@@ -74,6 +63,25 @@ public class AdServiceImpl {
         adEntity.setDescription(createAd.getDescription());
 //        adEntity.setImage(image.getBytes());
         adRepository.save(adEntity);
+
+        Path filePath = Path.of("./image",  "." + getExtension(file.getOriginalFilename()));
+        Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+        try (InputStream is = file.getInputStream();
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+        ) {
+            bis.transferTo(bos);
+        }
+        Image image = imageRepository.findByAdId(adEntity.getId()).orElseGet(Image::new);
+        image.setAd(adEntity);
+        image.setFilePath(filePath.toString());
+        image.setFileSize(file.getSize());
+        image.setMediaType(file.getContentType());
+        image.setData(file.getBytes());
+        imageRepository.save(image);
+
         return adsMapper.updateAdToDto(adEntity);
 
 
@@ -118,7 +126,7 @@ public class AdServiceImpl {
     public void uploadImage(Integer adId, MultipartFile file) throws
             IOException {
         AdEntity ad = findAd(adId);
-        Path filePath = Path.of("./avatar", adId + "." + getExtension(file.getOriginalFilename()));
+        Path filePath = Path.of("./image", adId + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
         try (InputStream is = file.getInputStream();
@@ -129,7 +137,7 @@ public class AdServiceImpl {
             bis.transferTo(bos);
         }
         Image image = imageRepository.findByAdId(adId).orElseGet(Image::new);
-        image.setAdEntity(ad);
+        image.setAd(ad);
         image.setFilePath(filePath.toString());
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
