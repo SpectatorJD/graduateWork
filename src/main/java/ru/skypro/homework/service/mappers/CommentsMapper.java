@@ -8,7 +8,8 @@ import ru.skypro.homework.entity.CommentEntity;
 
 @Mapper(componentModel = "spring")
 public interface CommentsMapper {
-    @Mapping(target = "pk",source = "adEntity.id")
+    @Mapping(target = "pk",expression = "java(commentEntity.getAdId().getId())")
+
     @Mapping(target = "author",expression = "java(commentEntity.getAuthor().getId())")
     Comment commentsToDto(CommentEntity commentEntity);
 

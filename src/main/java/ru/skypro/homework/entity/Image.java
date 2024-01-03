@@ -1,6 +1,5 @@
 package ru.skypro.homework.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,9 +35,8 @@ public class Image {
     @JoinColumn(name = "ads_id")
     private AdEntity ad;
 
-    @JsonIgnore
-    @OneToOne
-    @Column(name = "user")
+    @ManyToOne
+    @Column(name = "users_id")
     private UserEntity user;
 
     @Override

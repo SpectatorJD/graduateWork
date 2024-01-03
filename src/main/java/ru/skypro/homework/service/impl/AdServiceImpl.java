@@ -3,14 +3,16 @@ package ru.skypro.homework.service.impl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.*;
+import ru.skypro.homework.dto.Ad;
+import ru.skypro.homework.dto.Ads;
+import ru.skypro.homework.dto.CreateOrUpdateAd;
+import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.mappers.AdsMapper;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,7 +63,6 @@ public class AdServiceImpl {
         adEntity.setTitle(createAd.getTitle());
         adEntity.setPrice(createAd.getPrice());
         adEntity.setDescription(createAd.getDescription());
-//        adEntity.setImage(image.getBytes());
         adRepository.save(adEntity);
 
         Path filePath = Path.of("./image",  "." + getExtension(file.getOriginalFilename()));
@@ -81,6 +82,7 @@ public class AdServiceImpl {
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
+        adRepository.save(adEntity);
 
         return adsMapper.updateAdToDto(adEntity);
 
@@ -108,7 +110,7 @@ public class AdServiceImpl {
         return adsMapper.updateAdToDto(adEntity);
     }
 
-    //Получение объявлений авторизованного пользовател
+    //Получение объявлений авторизованного пользователь
 //    public Ads getMe(Authentication authentication) {
 //            List<Ad> collect = adRepository.findById(authentication.).stream().map(e -> {
 //                Ad ad = new Ad();
@@ -123,8 +125,7 @@ public class AdServiceImpl {
 //        }
 
     // Обновление картинки объявления
-    public void uploadImage(Integer adId, MultipartFile file) throws
-            IOException {
+    public void uploadImage(Integer adId, MultipartFile file) throws IOException {
         AdEntity ad = findAd(adId);
         Path filePath = Path.of("./image", adId + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
