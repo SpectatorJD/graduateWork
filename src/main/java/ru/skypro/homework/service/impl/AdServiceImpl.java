@@ -76,7 +76,7 @@ public class AdServiceImpl {
         }
         Image image = imageRepository.findByAdId(adEntity.getId()).orElseGet(Image::new);
         image.setAd(adEntity);
-        image.setFilePath(filePath.toString());
+
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
@@ -138,7 +138,7 @@ public class AdServiceImpl {
         }
         Image image = imageRepository.findByAdId(adId).orElseGet(Image::new);
         image.setAd(ad);
-        image.setFilePath(filePath.toString());
+
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());

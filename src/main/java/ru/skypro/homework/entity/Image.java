@@ -17,16 +17,10 @@ import java.util.Objects;
 public class Image {
 
     @Id
-    @GeneratedValue
-    @JsonIgnore
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @JsonIgnore
-    @Column(name = "path")
-    private String filePath;
-
-    @JsonIgnore
     @Column(name = "size")
     private long fileSize;
 
@@ -35,26 +29,29 @@ public class Image {
 
     @Lob
     @Type(type = "org.hibernate.type.BinaryType")
-    @JsonIgnore
     @Column(name = "data")
     private byte[] data;
 
+    @ManyToOne
+    @JoinColumn(name = "ads_id")
+    private AdEntity ad;
+
     @JsonIgnore
     @OneToOne
-    @Column(name = "ad")
-    private AdEntity ad;
+    @Column(name = "user")
+    private UserEntity user;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Image image = (Image) o;
-        return fileSize == image.fileSize && Objects.equals(id, image.id) && Objects.equals(filePath, image.filePath) && Objects.equals(mediaType, image.mediaType) && Arrays.equals(data, image.data) && Objects.equals(ad, image.ad) && Objects.equals(user, image.user);
+        return fileSize == image.fileSize && Objects.equals(id, image.id) && Objects.equals(mediaType, image.mediaType) && Arrays.equals(data, image.data) && Objects.equals(ad, image.ad) && Objects.equals(user, image.user);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, filePath, fileSize, mediaType, ad, user);
+        int result = Objects.hash(id, fileSize, mediaType, ad, user);
         result = 31 * result + Arrays.hashCode(data);
         return result;
     }
@@ -63,7 +60,6 @@ public class Image {
     public String toString() {
         return "Image{" +
                 "id=" + id +
-                ", filePath='" + filePath + '\'' +
                 ", fileSize=" + fileSize +
                 ", mediaType='" + mediaType + '\'' +
                 ", data=" + Arrays.toString(data) +
@@ -72,8 +68,5 @@ public class Image {
                 '}';
     }
 
-    @JsonIgnore
-    @OneToOne
-    @Column(name = "user")
-    private UserEntity user;
+
 }
