@@ -64,7 +64,7 @@
 //            UserEntity userEntity = userRepository.findById(authentication.).get();
 //            userEntity.setFirstName(updateUser.getFirstName());
 //            userEntity.setLastName(updateUser.getLastName());
-//            userEntity.setPhone(updateUser.getPhone());
+//            userEntity.setPhone(updateUser.getPhone()));
 //            userRepository.save(userEntity);
 //            return  usersMapper.updateUserToDto(userEntity);;
 //

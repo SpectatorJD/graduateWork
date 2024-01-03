@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class Comment {
 
     private String authorFirstName;
 
-    private Timestamp createAt;
+    private LocalDateTime createAt;
 
     private Integer pk;
 
