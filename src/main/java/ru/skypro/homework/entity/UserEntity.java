@@ -43,7 +43,7 @@ public class UserEntity {
     @Column(name = "username")
     private String username;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany
     private List<Image> images;
 
     @OneToMany(mappedBy = "users")
