@@ -12,7 +12,7 @@ import ru.skypro.homework.entity.AdEntity;
 public interface AdsMapper {
 
     @Mapping(target = "pk",source = "adEntity.id")
-    @Mapping(target = "author",expression = "java(adEntity.getAuthor().getId())")
+//    @Mapping(target = "author",expression = "java(adEntity.getUsers().getId())")
     Ad adsToDto(AdEntity adEntity);
 
     ExtendedAd extendAdToDto(AdEntity adEntity);

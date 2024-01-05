@@ -21,7 +21,7 @@ public class AdEntity {
 
     @ManyToOne
     @JoinColumn(name = "users_id")
-    private UserEntity author;
+    private UserEntity users;
 
     @OneToMany(mappedBy = "ads")
     private List<CommentEntity> comments;
@@ -38,29 +38,6 @@ public class AdEntity {
     @Column(name = "description")
     private String description;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AdEntity adEntity = (AdEntity) o;
-        return Objects.equals(id, adEntity.id) && Objects.equals(author, adEntity.author) && Objects.equals(comments, adEntity.comments) && Objects.equals(price, adEntity.price) && Objects.equals(title, adEntity.title) && Objects.equals(description, adEntity.description);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, author, comments, price, title, description);
-    }
-
-    @Override
-    public String toString() {
-        return "AdEntity{" +
-                "id=" + id +
-                ", author=" + author +
-                ", comments=" + comments +
-                ", price=" + price +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }
 

@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,8 +9,10 @@ import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
+//import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.repository.AdRepository;
+//import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.mappers.AdsMapper;
 
@@ -22,7 +25,7 @@ import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class AdServiceImpl {
 
@@ -30,12 +33,9 @@ public class AdServiceImpl {
     private final AdsMapper adsMapper;
     private final ImageRepository imageRepository;
 
-    public AdServiceImpl(AdRepository adRepository, AdsMapper adsMapper, ImageRepository imageRepository) {
-        this.adRepository = adRepository;
-        this.adsMapper = adsMapper;
-        this.imageRepository = imageRepository;
 
-    }
+
+
 
     @Value("${image.dir.path}")
     private String imagesDir;
@@ -56,7 +56,7 @@ public class AdServiceImpl {
 //        return new Ads(collect.size(), collect);
     }
 
-    //Добавление объявления
+//    Добавление объявления
     public CreateOrUpdateAd createAd(CreateOrUpdateAd createAd, MultipartFile file) throws IOException {
 
         AdEntity adEntity = new AdEntity();
@@ -75,8 +75,8 @@ public class AdServiceImpl {
         ) {
             bis.transferTo(bos);
         }
-        Image image = imageRepository.findByAdId(adEntity.getId()).orElseGet(Image::new);
-        image.setAd(adEntity);
+        Image image = imageRepository.findById(adEntity.getId()).orElseGet(Image::new);
+        image.setAds(adEntity);
 
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
@@ -124,7 +124,7 @@ public class AdServiceImpl {
 //            return new Ads(collect.size(),collect);
 //        }
 
-    // Обновление картинки объявления
+//     Обновление картинки объявления
     public void uploadImage(Integer adId, MultipartFile file) throws IOException {
         AdEntity ad = findAd(adId);
         Path filePath = Path.of("./image", adId + "." + getExtension(file.getOriginalFilename()));
@@ -137,8 +137,8 @@ public class AdServiceImpl {
         ) {
             bis.transferTo(bos);
         }
-        Image image = imageRepository.findByAdId(adId).orElseGet(Image::new);
-        image.setAd(ad);
+        Image image = imageRepository.findById(adId).orElseGet(Image::new);
+        image.setAds(ad);
 
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());

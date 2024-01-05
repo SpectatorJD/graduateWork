@@ -21,7 +21,7 @@ public class CommentEntity {
 
     @ManyToOne()
     @JoinColumn(name = "ads_id")
-    private AdEntity adId;
+    private AdEntity ads;
 
     @ManyToOne
     @JoinColumn(name = "users_id")
@@ -38,19 +38,19 @@ public class CommentEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CommentEntity that = (CommentEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(adId, that.adId) && Objects.equals(author, that.author) && Objects.equals(createAt, that.createAt) && Objects.equals(text, that.text);
+        return Objects.equals(id, that.id) && Objects.equals(ads, that.ads) && Objects.equals(author, that.author) && Objects.equals(createAt, that.createAt) && Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, adId, author, createAt, text);
+        return Objects.hash(id, ads, author, createAt, text);
     }
 
     @Override
     public String toString() {
         return "CommentEntity{" +
                 "id=" + id +
-                ", adId=" + adId +
+                ", ads=" + ads +
                 ", author=" + author +
                 ", createAt=" + createAt +
                 ", text='" + text + '\'' +

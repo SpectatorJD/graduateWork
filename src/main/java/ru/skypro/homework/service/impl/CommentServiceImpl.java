@@ -35,13 +35,14 @@ public class CommentServiceImpl {
 
     //Удаление комментария
     public void deleteInfoAboutCommentById(Integer adId, Integer commentId) {
-        commentRepository.deleteById(adId, commentId);
+        CommentEntity commentEntity = commentRepository.findByIdAndAdsId(commentId, adId).orElseThrow();
+        commentRepository.delete(commentEntity);
 
     }
 
     //Обновление комментария
     public CreateOrUpdateComment updateComment(Integer adId, Integer commentId, CreateOrUpdateComment updateComment) {
-        CommentEntity commentEntity = commentRepository.findByAdIdAndCommentId(adId, commentId).get();
+        CommentEntity commentEntity = commentRepository.findByIdAndAdsId(commentId, adId).orElseThrow();
         commentEntity.setText(updateComment.getText());
         commentRepository.save(commentEntity);
         return commentsMapper.updateCommentToDto(commentEntity);
