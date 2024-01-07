@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.AdEntity;
-import ru.skypro.homework.entity.CommentEntity;
-import ru.skypro.homework.entity.Image;
-import ru.skypro.homework.service.impl.AdServiceImpl;
-import ru.skypro.homework.service.impl.CommentServiceImpl;
+import ru.skypro.homework.service.impl.AdService;
+import ru.skypro.homework.service.impl.CommentService;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -23,8 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/ads")
 public class AdController {
-    private final AdServiceImpl adService;
-    private final CommentServiceImpl commentService;
+    private final AdService adService;
+    private final CommentService commentService;
 
 
 

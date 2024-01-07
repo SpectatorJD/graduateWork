@@ -2,6 +2,10 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
@@ -27,18 +31,19 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @RequiredArgsConstructor
 @Service
-public class AdServiceImpl {
+public class AdService {
 
     private final AdRepository adRepository;
     private final AdsMapper adsMapper;
     private final ImageRepository imageRepository;
-
-
-
-
+    private final UserDetailsService userDetailsService;
 
     @Value("${image.dir.path}")
     private String imagesDir;
+    private String objectAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ((UserDetails) authentication.getPrincipal()).getUsername();
+    }
 
     //Получение всех объявлений
     public Ads getAllInfoAboutAds() {

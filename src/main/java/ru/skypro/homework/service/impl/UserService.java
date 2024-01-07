@@ -10,7 +10,6 @@
 //import org.springframework.stereotype.Service;
 //import org.springframework.web.multipart.MultipartFile;
 //import ru.skypro.homework.dto.*;
-//import ru.skypro.homework.entity.AdEntity;
 //import ru.skypro.homework.entity.Image;
 //import ru.skypro.homework.entity.UserEntity;
 //import ru.skypro.homework.repository.ImageRepository;
@@ -23,12 +22,11 @@
 //import java.util.Optional;
 //import java.util.stream.Collectors;
 //
-//import static com.datical.liquibase.ext.init.InitProjectUtil.getExtension;
 //import static java.nio.file.StandardOpenOption.CREATE_NEW;
 //
 //@RequiredArgsConstructor
 //@Service
-//public class UserServiceImpl {
+//public class UserService {
 //
 //    private final UserRepository userRepository;
 //    private final UsersMapper usersMapper;
@@ -46,8 +44,8 @@
 //
 //    //Обновление пароля
 //    public NewPassword changePassword( NewPassword newPassword, Authentication authentication) {
+//        userDetailsService.loadUserByUsername(objectAuthentication());
 //        NewPassword resultPassword = new NewPassword();
-//        authentication.getName();
 //        resultPassword.setCurrentPassword(newPassword.getCurrentPassword());
 //        resultPassword.setNewPassword(newPassword.getNewPassword());
 //        return resultPassword;
@@ -55,13 +53,13 @@
 //
 //    //Получение информации об авторизованном пользователе
 //        public User getMe(Authentication authentication) {
-//            List<User> collect = userRepository.findById(authentication.).stream().map(e -> usersMapper.usersToDto(e)).collect(Collectors.toList());
+//            List<User> collect = userRepository.findByUsername(userDetailsService.loadUserByUsername(objectAuthentication())).stream().map(e -> usersMapper.usersToDto(e)).collect(Collectors.toList());
 //        return (User) collect;;
 //    }
 //
 //    //Обновление информации об авторизованном пользователе
 //        public UpdateUser updateUser(UpdateUser updateUser, Authentication authentication) {
-//            UserEntity userEntity = userRepository.findById(authentication.).get();
+//            UserEntity userEntity = userRepository.findByUsername(userDetailsService.loadUserByUsername(objectAuthentication())).get();
 //            userEntity.setFirstName(updateUser.getFirstName());
 //            userEntity.setLastName(updateUser.getLastName());
 //            userEntity.setPhone(updateUser.getPhone()));
@@ -73,10 +71,8 @@
 //    //Обновление аватара авторизованного пользователя
 //    public void updateImage(MultipartFile file, Authentication authentication) throws IOException {
 //
-//        public void uploadImage (Integer adId, MultipartFile file) throws
-//        IOException {
-//            UserEntity user = findUser(authentication);
-//            Path filePath = Path.of("./image", authentication + "." + getExtension(file.getOriginalFilename()));
+//            UserEntity user = findOne(userDetailsService.loadUserByUsername(objectAuthentication()));
+//            Path filePath = Path.of("./image", userDetailsService.loadUserByUsername(objectAuthentication()) + "." + getExtension(file.getOriginalFilename()));
 //            Files.createDirectories(filePath.getParent());
 //            Files.deleteIfExists(filePath);
 //            try (
@@ -88,8 +84,7 @@
 //                bis.transferTo(bos);
 //            }
 //            Image image = imageRepository.findByUserName(authentication.).orElseGet(Image::new);
-//            image.setUser(user);
-//            image.setFilePath(filePath.toString());
+//            image.getUsers(user);
 //            image.setFileSize(file.getSize());
 //            image.setMediaType(file.getContentType());
 //            image.setData(file.getBytes());
@@ -100,8 +95,8 @@
 //    private String getExtension(String fileName) {
 //        return fileName.substring(fileName.lastIndexOf(".") + 1);
 //    }
-//    public Optional<UserEntity> findOne(Integer id) {
-//        return userRepository.findById(id);
+//    public Optional<UserEntity> findOne(String userName) {
+//        return Optional.of(userRepository.findByUsername(userName).get());
 //    }
 //    }
 //

@@ -11,7 +11,7 @@
 //import ru.skypro.homework.dto.NewPassword;
 //import ru.skypro.homework.dto.UpdateUser;
 //import ru.skypro.homework.dto.User;
-//import ru.skypro.homework.service.impl.UserServiceImpl;
+//import ru.skypro.homework.service.impl.UserService;
 //
 //import java.io.IOException;
 //
@@ -21,7 +21,7 @@
 //@RequiredArgsConstructor
 //@RequestMapping("/Users")
 //public class UsersController {
-//    private final UserServiceImpl userService;
+//    private final UserService userService;
 //
 ////@Operation(summary = "Обновление пароля")
 ////@ApiResponses(value = {

@@ -11,8 +11,6 @@ public interface UsersMapper {
 
     User usersToDto(UserEntity userEntity);
 
-//    ExtendedAd extendAdToDto(UserEntity userEntity);
-
     UpdateUser updateUserToDto(UserEntity userEntity);
 }
 
