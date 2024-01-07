@@ -1,4 +1,4 @@
-package ru.skypro.homework.service.impl;
+package ru.skypro.homework.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
