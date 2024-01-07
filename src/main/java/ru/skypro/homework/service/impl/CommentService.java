@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class CommentServiceImpl {
+public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentsMapper commentsMapper;
 
