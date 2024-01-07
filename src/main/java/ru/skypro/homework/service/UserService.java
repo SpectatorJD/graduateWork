@@ -1,4 +1,4 @@
-//package ru.skypro.homework.service.impl;
+//package ru.skypro.homework.service;
 //
 //import antlr.collections.List;
 //import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@
 //
 //    //Обновление пароля
 //    public NewPassword changePassword( NewPassword newPassword, Authentication authentication) {
-//        userDetailsService.loadUserByUsername(objectAuthentication());
+//        userDetailsService.loadUserByUsername(authentication.getName());
 //        NewPassword resultPassword = new NewPassword();
 //        resultPassword.setCurrentPassword(newPassword.getCurrentPassword());
 //        resultPassword.setNewPassword(newPassword.getNewPassword());
@@ -62,7 +62,7 @@
 //            UserEntity userEntity = userRepository.findByUsername(userDetailsService.loadUserByUsername(objectAuthentication())).get();
 //            userEntity.setFirstName(updateUser.getFirstName());
 //            userEntity.setLastName(updateUser.getLastName());
-//            userEntity.setPhone(updateUser.getPhone()));
+////            userEntity.setPhone(updateUser.getPhone()));
 //            userRepository.save(userEntity);
 //            return  usersMapper.updateUserToDto(userEntity);;
 //
