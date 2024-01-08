@@ -128,7 +128,7 @@ public class AdController {
 //            @ApiResponse(responseCode = "404", description = "Not found")})
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws
+    public ResponseEntity<AdEntity> updateImage(@PathVariable Integer id, @RequestParam MultipartFile image) throws
             IOException {
         Optional<AdEntity> adEntity = adService.findOne(id);
         if (adEntity == null) {

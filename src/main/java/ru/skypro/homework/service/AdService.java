@@ -8,16 +8,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.Ad;
-import ru.skypro.homework.dto.Ads;
-import ru.skypro.homework.dto.CreateOrUpdateAd;
-import ru.skypro.homework.dto.ExtendedAd;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.AdEntity;
 //import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.Image;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.AdRepository;
 //import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.ImageRepository;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.mappers.AdsMapper;
 
 import java.io.*;
@@ -36,10 +35,11 @@ public class AdService {
     private final AdRepository adRepository;
     private final AdsMapper adsMapper;
     private final ImageRepository imageRepository;
-    private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
 
     @Value("${image.dir.path}")
     private String imagesDir;
+
     private String objectAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ((UserDetails) authentication.getPrincipal()).getUsername();
@@ -49,16 +49,6 @@ public class AdService {
     public Ads getAllInfoAboutAds() {
         List<Ad> collect = adRepository.findAll().stream().map(adsMapper::adsToDto).collect(Collectors.toList());
         return new Ads(collect.size(), collect);
-//        List<Ad> collect = adRepository.findAll().stream().map(e -> {
-//            Ad ad = new Ad();
-//            ad.setAuthor(ad.getAuthor());
-//            ad.setPk(ad.getPk());
-//            ad.setImage(ad.getImage());
-//            ad.setTitle(ad.getTitle());
-//            ad.setPrice(ad.getPrice());
-//            return ad;
-//        }).collect(Collectors.toList());
-//        return new Ads(collect.size(), collect);
     }
 
 //    Добавление объявления
@@ -82,13 +72,11 @@ public class AdService {
         }
         Image image = imageRepository.findById(adEntity.getId()).orElseGet(Image::new);
         image.setAds(adEntity);
-
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
         adRepository.save(adEntity);
-
         return adsMapper.updateAdToDto(adEntity);
 
 
@@ -116,18 +104,19 @@ public class AdService {
     }
 
     //Получение объявлений авторизованного пользователь
-//    public Ads getMe(Authentication authentication) {
-//            List<Ad> collect = adRepository.findById(authentication.).stream().map(e -> {
-//                Ad ad = new Ad();
-//                ad.setAuthor(ad.getAuthor());
-//                ad.setPk(ad.getPk());
-//                ad.setImage(ad.getImage());
-//                ad.setTitle(ad.getTitle());
-//                ad.setPrice(ad.getPrice());
-//                return ad;
-//            }).collect(Collectors.toList());
-//            return new Ads(collect.size(),collect);
-//        }
+    public Ads getMe(Authentication authentication) {
+            UserEntity userEntity = userRepository.findByEmail(authentication.getName()).get();
+            List<Ad> collect = adRepository.findByUsers(userEntity.getId()).stream().map(e -> {
+                Ad ad = new Ad();
+                ad.setAuthor(ad.getAuthor());
+                ad.setPk(ad.getPk());
+                ad.setImage(ad.getImage());
+                ad.setTitle(ad.getTitle());
+                ad.setPrice(ad.getPrice());
+                return ad;
+            }).collect(Collectors.toList());
+            return new Ads(collect.size(),collect);
+        }
 
 //     Обновление картинки объявления
     public void uploadImage(Integer adId, MultipartFile file) throws IOException {
@@ -144,7 +133,6 @@ public class AdService {
         }
         Image image = imageRepository.findById(adId).orElseGet(Image::new);
         image.setAds(ad);
-
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
