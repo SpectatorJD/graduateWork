@@ -38,6 +38,5 @@ public class AdEntity {
     @Column(name = "description")
     private String description;
 
-
 }
 

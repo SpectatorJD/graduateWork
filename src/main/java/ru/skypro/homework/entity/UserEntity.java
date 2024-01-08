@@ -21,8 +21,8 @@ public class UserEntity {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "emile")
-    private String emile;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "first_name")
     private String firstName;
@@ -39,9 +39,6 @@ public class UserEntity {
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "username")
-    private String username;
 
     @OneToMany(mappedBy = "users")
     private List<Image> images;

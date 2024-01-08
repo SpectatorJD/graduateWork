@@ -6,5 +6,4 @@ import ru.skypro.homework.entity.Image;
 import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<Image, Integer> {
-//    Optional<Image> findById(Integer Id);
 }
