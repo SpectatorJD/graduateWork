@@ -43,7 +43,7 @@ public class AdController {
 //            @ApiResponse(responseCode = "201", description = "Created",
 //                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
 //                            array = @ArraySchema(schema = @Schema(implementation = Ad.class)))),
-//            @ApiResponse(responseCode = "401", description = "Unauthorized")})
+//              @ApiResponse(responseCode = "401", description = "Unauthorized")})
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<CreateOrUpdateAd> addAd(@RequestPart(value = "properties", required = true) CreateOrUpdateAd properties,
