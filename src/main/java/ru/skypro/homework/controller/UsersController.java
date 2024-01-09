@@ -38,12 +38,6 @@ public class UsersController {
     NewPassword resultPassword = userService.changePassword(newPassword,authentication);
     return ResponseEntity.ok(resultPassword);
 }
-//public NewPassword changePassword(NewPassword newPassword, Authentication authentication) {
-//        UserEntity userEntity = userRepository.findByEmail(authentication.getName()).orElseThrow();
-//        userEntity.setPassword(encoder.encode(newPassword.getNewPassword()));
-//        userRepository.save(userEntity);
-//        return newPassword;
-
 
     @GetMapping("/me")
 public ResponseEntity<User> getMe(Authentication authentication) {

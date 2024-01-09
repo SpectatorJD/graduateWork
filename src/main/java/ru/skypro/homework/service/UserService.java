@@ -79,7 +79,7 @@ public class UserService {
             bis.transferTo(bos);
         }
         Image image = imageRepository.findById(users.getId()).orElseGet(Image::new);
-//        image.getUsers(users);
+        image.setUsers(users);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
