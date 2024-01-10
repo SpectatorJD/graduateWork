@@ -20,11 +20,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-//    @Operation(summary = "Авторизация пользователя")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "OK"),
-//            @ApiResponse(responseCode = "401", description = "Unauthorized")})
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Login login) {
         if (authService.login(login.getUsername(), login.getPassword())) {
@@ -33,11 +28,6 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
-//    @Operation(summary = "Регистрация пользователя")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "Created"),
-//            @ApiResponse(responseCode = "400", description = "Bad Request")})
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Register register) {
