@@ -41,7 +41,7 @@ public class UserEntity {
     private String password;
 
     @OneToMany(mappedBy = "users")
-    private List<Image> images;
+    private List<ImageEntity> images;
 
     @OneToMany(mappedBy = "users")
     private List<AdEntity> adEntityList;

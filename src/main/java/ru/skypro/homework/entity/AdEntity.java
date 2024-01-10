@@ -27,7 +27,7 @@ public class AdEntity {
     private List<CommentEntity> comments;
 
     @OneToMany(mappedBy = "ads" )
-    private List<Image> images;
+    private List<ImageEntity> images;
 
     @Column(name = "price")
     private Integer price;

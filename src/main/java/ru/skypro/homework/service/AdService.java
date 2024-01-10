@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.AdEntity;
-//import ru.skypro.homework.entity.Image;
-import ru.skypro.homework.entity.Image;
+//import ru.skypro.homework.entity.ImageEntity;
+import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.AdRepository;
 //import ru.skypro.homework.repository.ImageRepository;
@@ -70,7 +70,7 @@ public class AdService {
         ) {
             bis.transferTo(bos);
         }
-        Image image = imageRepository.findById(adEntity.getId()).orElseGet(Image::new);
+        ImageEntity image = imageRepository.findById(adEntity.getId()).orElseGet(ImageEntity::new);
         image.setAds(adEntity);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
@@ -131,7 +131,7 @@ public class AdService {
         ) {
             bis.transferTo(bos);
         }
-        Image image = imageRepository.findById(adId).orElseGet(Image::new);
+        ImageEntity image = imageRepository.findById(adId).orElseGet(ImageEntity::new);
         image.setAds(ad);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());

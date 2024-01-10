@@ -8,10 +8,10 @@ import ru.skypro.homework.entity.UserEntity;
 import java.util.Collection;
 import java.util.Collections;
 
-public class MyUserDetails implements UserDetails {
+public class CastUserDetails implements UserDetails {
     private final UserEntity userEntity;
 
-    public MyUserDetails(UserEntity userEntity) {
+    public CastUserDetails(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
 
