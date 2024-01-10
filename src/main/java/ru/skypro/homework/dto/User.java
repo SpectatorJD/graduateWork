@@ -11,7 +11,7 @@ public class User {
 
     private Integer id;
 
-    private String emile;
+    private String email;
 
     private String firstName;
 

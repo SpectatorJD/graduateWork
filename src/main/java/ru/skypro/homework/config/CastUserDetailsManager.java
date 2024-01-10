@@ -8,11 +8,11 @@ import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
 @Service
-public class MyUserDetailsManager implements UserDetailsManager {
+public class CastUserDetailsManager implements UserDetailsManager {
 
     private final UserRepository userRepository;
 
-    public MyUserDetailsManager(UserRepository userRepository) {
+    public CastUserDetailsManager(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -53,6 +53,6 @@ public class MyUserDetailsManager implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).map(MyUserDetails::new).orElseThrow();
+        return userRepository.findByEmail(username).map(CastUserDetails::new).orElseThrow();
     }
 }

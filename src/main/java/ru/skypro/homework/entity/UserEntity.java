@@ -40,8 +40,9 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "users")
-    private List<Image> images;
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private ImageEntity images;
 
     @OneToMany(mappedBy = "users")
     private List<AdEntity> adEntityList;
