@@ -84,6 +84,9 @@ public class UserService {
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
+
+        users.setImages(image);
+        userRepository.save(users);
     }
 
     //    file name gets extended

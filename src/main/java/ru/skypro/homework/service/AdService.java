@@ -73,11 +73,13 @@ public class AdService {
         }
         ImageEntity image = imageRepository.findById(adEntity.getId()).orElseGet(ImageEntity::new);
         image.setAds(adEntity);
+        image.setUsers(userEntity);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
-//        adEntity.getImages(image);
+
+        adEntity.setImages(image);
         adRepository.save(adEntity);
         return adsMapper.updateAdToDto(adEntity);
 
@@ -112,7 +114,7 @@ public class AdService {
                 Ad ad = new Ad();
                 ad.setAuthor(e.getUsers().getId());
                 ad.setPk(e.getId());
-                ad.setImage("/ads/" + e.getId() + "/image");
+                ad.setImage("http://localhost:3000/ads/" + e.getId() + "/image");
                 ad.setTitle(e.getTitle());
                 ad.setPrice(e.getPrice());
                 return ad;
@@ -139,6 +141,9 @@ public class AdService {
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
+
+        ad.setImages(image);
+        adRepository.save(ad);
     }
 
 

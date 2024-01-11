@@ -27,7 +27,7 @@ public class AdEntity {
     private List<CommentEntity> comments;
 
     @ManyToOne
-//    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "image_id")
     private ImageEntity images;
 
     @Column(name = "price")
@@ -39,8 +39,5 @@ public class AdEntity {
     @Column(name = "description")
     private String description;
 
-//    public void getImages(ImageEntity image) {
-//
-//    }
 }
 
