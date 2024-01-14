@@ -15,6 +15,7 @@ import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.mappers.CommentsMapper;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,8 @@ public class CommentService {
     private final CommentsMapper commentsMapper;
     private final AdRepository adRepository;
     private final UserRepository userRepository;
-
+    private final LocalDateTime today = LocalDateTime.now();
+    DateTimeFormatter dateAndTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     //Получение комментариев объявления
     public Comments getInfoAboutCommitById(Integer id) {
         List<CommentEntity> comments = adRepository.findById(id).get().getComments();
@@ -39,7 +41,7 @@ public class CommentService {
         AdEntity adEntity = adRepository.findById(id).get();
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setAuthor(userEntity);
-        commentEntity.setCreateAt(LocalDateTime.now());
+        commentEntity.setCreateAt(LocalDateTime.parse(today.format(dateAndTime)));
         commentEntity.setAds(adEntity);
         commentEntity.setText(createComment.getText());
         commentRepository.save(commentEntity);
