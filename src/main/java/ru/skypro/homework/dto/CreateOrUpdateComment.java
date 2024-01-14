@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateOrUpdateComment {
 
+    private Integer pk;
+
     private String text;
+
+    private String createAd;
 
 }

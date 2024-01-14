@@ -11,7 +11,8 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "comments")
+@Entity
+@Table(name = "comments")
 public class CommentEntity {
 
     @Id
