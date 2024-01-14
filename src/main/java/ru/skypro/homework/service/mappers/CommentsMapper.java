@@ -9,10 +9,11 @@ import ru.skypro.homework.entity.CommentEntity;
 
 @Mapper(componentModel = "spring")
 public interface CommentsMapper {
-    @Mapping(target = "pk",expression = "java(commentEntity.getAds().getId())")
+    @Mapping(target = "pk",source = "id")
     @Mapping(target = "author",expression = "java(commentEntity.getAuthor().getId())")
     Comment commentsToDto(CommentEntity commentEntity);
-
+    @Mapping(target = "pk",source = "id")
     CreateOrUpdateComment updateCommentToDto(CommentEntity commentEntity);
+
 }
 

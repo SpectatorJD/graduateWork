@@ -8,6 +8,6 @@ import java.util.Optional;
 
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Integer> {
-@Query(value = "select * from comments where id=:commentId and id_ads=:adId" , nativeQuery = true)
-    Optional<CommentEntity> findByIdAndAdsId(Integer adId, Integer commentId);
+@Query(value = "select * from comments where id=:commentId and ads_id=:adId" , nativeQuery = true)
+    Optional<CommentEntity> findByIdAndAdsId(Integer commentId,Integer adId);
 }

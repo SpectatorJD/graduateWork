@@ -95,13 +95,13 @@ public class AdController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<CreateOrUpdateComment> createComment(@PathVariable Integer id, @RequestBody CreateOrUpdateComment
+    public ResponseEntity<CreateOrUpdateComment> createComment(Authentication authentication, @PathVariable Integer id, @RequestBody CreateOrUpdateComment
             createComment) {
         Optional<AdEntity> adEntity = adService.findOne(id);
         if (adEntity == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        CreateOrUpdateComment comment = commentService.createComment(id, createComment);
+        CreateOrUpdateComment comment = commentService.createComment(id, createComment, authentication);
         return ResponseEntity.ok(comment);
     }
 
@@ -123,7 +123,7 @@ public class AdController {
             if (commentEntity == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
-            return ResponseEntity.ok(updateComment);
+            return ResponseEntity.ok(commentEntity);
         }
 }
 
