@@ -79,7 +79,6 @@ public class UserService {
             bis.transferTo(bos);
         }
         ImageEntity image = imageRepository.findById(users.getId()).orElseGet(ImageEntity::new);
-        image.setUsers(users);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());

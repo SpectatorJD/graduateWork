@@ -72,8 +72,6 @@ public class AdService {
             bis.transferTo(bos);
         }
         ImageEntity image = imageRepository.findById(adEntity.getId()).orElseGet(ImageEntity::new);
-        image.setAds(adEntity);
-        image.setUsers(userEntity);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
@@ -136,7 +134,6 @@ public class AdService {
             bis.transferTo(bos);
         }
         ImageEntity image = imageRepository.findById(adId).orElseGet(ImageEntity::new);
-        image.setAds(ad);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
