@@ -33,12 +33,4 @@ public class ImageEntity {
     @Column(name = "data")
     private byte[] data;
 
-    @ManyToOne
-    @JoinColumn(name = "ads_id")
-    private AdEntity ads;
-
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private UserEntity users;
-
 }
