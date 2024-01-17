@@ -18,7 +18,7 @@ public class Comment {
 
     private String authorFirstName;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private Integer pk;
 
