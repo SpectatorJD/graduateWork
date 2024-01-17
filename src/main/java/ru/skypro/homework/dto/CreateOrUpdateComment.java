@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +16,6 @@ public class CreateOrUpdateComment {
 
     private String text;
 
-    private String createAd;
+    private LocalDateTime createdAt;
 
 }
