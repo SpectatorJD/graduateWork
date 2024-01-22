@@ -26,8 +26,9 @@ public class AdEntity {
     @OneToMany(mappedBy = "ads")
     private List<CommentEntity> comments;
 
-    @OneToMany(mappedBy = "ads" )
-    private List<Image> images;
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private ImageEntity images;
 
     @Column(name = "price")
     private Integer price;

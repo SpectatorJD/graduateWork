@@ -5,17 +5,17 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateOrUpdateComment {
 
-    private String Text;
+    private Integer pk;
 
-    public void setText(String text) {
-        if (text.length() < 8 || text.length() > 64) {
-            throw new IllegalArgumentException("Текст должен состоять из 8-64 символов");
-        }
-        Text = text;
-    }
+    private String text;
+
+    private LocalDateTime createdAt;
+
 }

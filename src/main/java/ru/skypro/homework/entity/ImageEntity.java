@@ -4,16 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import ru.skypro.homework.dto.User;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "image")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
+public class ImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +32,5 @@ public class Image {
     @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "data")
     private byte[] data;
-
-    @ManyToOne
-    @JoinColumn(name = "ads_id")
-    private AdEntity ads;
-
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private UserEntity users;
 
 }

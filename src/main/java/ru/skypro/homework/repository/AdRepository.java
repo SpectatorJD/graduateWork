@@ -7,5 +7,5 @@ import ru.skypro.homework.entity.UserEntity;
 import java.util.Optional;
 
 public interface AdRepository extends JpaRepository<AdEntity, Integer> {
-    Optional<AdEntity> findByUsers(Integer users);
+    Optional<AdEntity> findByUsersId(Integer id);
 }

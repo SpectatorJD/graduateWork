@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.AdEntity;
-//import ru.skypro.homework.entity.Image;
-import ru.skypro.homework.entity.Image;
+//import ru.skypro.homework.entity.ImageEntity;
+import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.AdRepository;
 //import ru.skypro.homework.repository.ImageRepository;
@@ -52,12 +52,13 @@ public class AdService {
     }
 
 //    Добавление объявления
-    public CreateOrUpdateAd createAd(CreateOrUpdateAd createAd, MultipartFile file) throws IOException {
-
+    public CreateOrUpdateAd createAd(Authentication authentication, CreateOrUpdateAd createAd, MultipartFile file) throws IOException {
+        UserEntity userEntity = userRepository.findByEmail(authentication.getName()).get();
         AdEntity adEntity = new AdEntity();
         adEntity.setTitle(createAd.getTitle());
         adEntity.setPrice(createAd.getPrice());
         adEntity.setDescription(createAd.getDescription());
+        adEntity.setUsers(userEntity);
         adRepository.save(adEntity);
 
         Path filePath = Path.of("./image",  "." + getExtension(file.getOriginalFilename()));
@@ -70,12 +71,13 @@ public class AdService {
         ) {
             bis.transferTo(bos);
         }
-        Image image = imageRepository.findById(adEntity.getId()).orElseGet(Image::new);
-        image.setAds(adEntity);
+        ImageEntity image = imageRepository.findById(adEntity.getId()).orElseGet(ImageEntity::new);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
+
+        adEntity.setImages(image);
         adRepository.save(adEntity);
         return adsMapper.updateAdToDto(adEntity);
 
@@ -84,8 +86,8 @@ public class AdService {
 
     //Получение информации об объявлении
     public ExtendedAd getInfoExtendedAdById(Integer id) {
-        List<ExtendedAd> collect = adRepository.findById(id).stream().map(adsMapper::extendAdToDto).collect(Collectors.toList());
-        return (ExtendedAd) collect;
+        return adRepository.findById(id).map(adsMapper::extendAdToDto).orElse(null);
+
     }
 
     //Удаление объявления
@@ -106,13 +108,13 @@ public class AdService {
     //Получение объявлений авторизованного пользователь
     public Ads getMe(Authentication authentication) {
             UserEntity userEntity = userRepository.findByEmail(authentication.getName()).get();
-            List<Ad> collect = adRepository.findByUsers(userEntity.getId()).stream().map(e -> {
+            List<Ad> collect = adRepository.findByUsersId(userEntity.getId()).stream().map(e -> {
                 Ad ad = new Ad();
-                ad.setAuthor(ad.getAuthor());
-                ad.setPk(ad.getPk());
-                ad.setImage(ad.getImage());
-                ad.setTitle(ad.getTitle());
-                ad.setPrice(ad.getPrice());
+                ad.setAuthor(e.getUsers().getId());
+                ad.setPk(e.getId());
+                ad.setImage("http://localhost:3000/ads/" + e.getId() + "/image");
+                ad.setTitle(e.getTitle());
+                ad.setPrice(e.getPrice());
                 return ad;
             }).collect(Collectors.toList());
             return new Ads(collect.size(),collect);
@@ -131,12 +133,14 @@ public class AdService {
         ) {
             bis.transferTo(bos);
         }
-        Image image = imageRepository.findById(adId).orElseGet(Image::new);
-        image.setAds(ad);
+        ImageEntity image = imageRepository.findById(adId).orElseGet(ImageEntity::new);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
+
+        ad.setImages(image);
+        adRepository.save(ad);
     }
 
 

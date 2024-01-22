@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.AdEntity;
-import ru.skypro.homework.entity.Image;
+import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.UserRepository;
@@ -78,12 +78,14 @@ public class UserService {
         ) {
             bis.transferTo(bos);
         }
-        Image image = imageRepository.findById(users.getId()).orElseGet(Image::new);
-//        image.getUsers(users);
+        ImageEntity image = imageRepository.findById(users.getId()).orElseGet(ImageEntity::new);
         image.setFileSize(file.getSize());
         image.setMediaType(file.getContentType());
         image.setData(file.getBytes());
         imageRepository.save(image);
+
+        users.setImages(image);
+        userRepository.save(users);
     }
 
     //    file name gets extended
