@@ -5,11 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.skypro.homework.dto.Role;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,53 +17,34 @@ import java.util.Objects;
 public class UserEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-@Column(name = "emile")
-    private String emile;
+    @Column(name = "email")
+    private String email;
 
-@Column(name = "first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-@Column(name = "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-@Column(name = "phone")
+    @Column(name = "phone")
     private String phone;
 
-@Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
-@Column(name = "image")
-    private String image;
-//    image	string
-//    ссылка на аватар пользователя
+    @Column(name = "password")
+    private String password;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(emile, that.emile) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(phone, that.phone) && role == that.role && Objects.equals(image, that.image);
-    }
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private ImageEntity images;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, emile, firstName, lastName, phone, role, image);
-    }
+    @OneToMany(mappedBy = "users")
+    private List<AdEntity> adEntityList;
 
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "id=" + id +
-                ", emile='" + emile + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", role=" + role +
-                ", image='" + image + '\'' +
-                '}';
-    }
 }
